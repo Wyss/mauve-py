@@ -1,0 +1,28 @@
+Changes between 0.5.1 and 0.5.2
+===============================
+Fixed critical gnGBKSource bug with end-of-line characters
+Fixed numerous gnRAWSource bugs
+Changed default source format to fastA
+Made gnSeqI 64-bit unsigned
+Now using a registry key for CodeWarrior source trees instead of an environment variable
+Updated project to CodeWarrior 8.3 format
+
+Changes between 0.5.0 and 0.5.1
+===============================
+
+Now using the NSIS installer to install libGenome in Windows.
+
+The libGenome_App CodeWarrior project stationary now uses the
+GenomeDev environment variable to specify the location of the
+libGenome source tree.
+
+Updates for compilation using gcc 3.2.
+
+Numerous fixes to the API documentation
+
+Bug fix for reading subsequences from GenBank flat files.  An
+incorrect subsequence could potentially be read prior to version 0.5.1.
+
+Bug fix in gnRAWSource, thanks to Jean-Marc Lasgouttes.
+
+Numerous other bug fixes for memory leaks and access violations.

@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libMems", "libMems.vcproj", "{20FE3C39-9B04-4D5F-8249-115D8812B93E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{20FE3C39-9B04-4D5F-8249-115D8812B93E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{20FE3C39-9B04-4D5F-8249-115D8812B93E}.Debug|Win32.Build.0 = Debug|Win32
+		{20FE3C39-9B04-4D5F-8249-115D8812B93E}.Release|Win32.ActiveCfg = Release|Win32
+		{20FE3C39-9B04-4D5F-8249-115D8812B93E}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
