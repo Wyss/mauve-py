@@ -1,16 +1,14 @@
 #!/bin/sh
 
-
 # brew install automake
-# brew install boost --build-from-source --HEAD
+# brew install boost --c++11
 # brew install pkg-config
 # brew install libtool
 
 export CFLAGS="-O3 -arch x86_64 -mmacosx-version-min=10.9"
 export CXXFLAGS="-O3 -arch x86_64 -mmacosx-version-min=10.9 -DBOOST_SYSTEM_NO_DEPRECATED "
 export CXX="clang++ -std=c++11 -stdlib=libc++"
-# export PKG_CONFIG_PATH="`pwd`/osx_build/lib/pkgconfig"
-# export BJAMFLAGS=" --toolset=darwin --user-config=../user-config.jam link=static threading=single "
+# export BJAMFLAGS=" --toolset=darwin --user-config=${BPATH}/user-config.jam  link=static threading=single "
 BPATH=`pwd`
 export BJAMFLAGS=" --toolset=darwin --user-config=${BPATH}/user-config.jam link=static"
 echo $BJAMFLAGS
