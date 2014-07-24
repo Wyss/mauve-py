@@ -22,6 +22,8 @@ boost requirements for debian linux
 
     libboost-filesystem-dev, libboost-program-options-dev, libboost-iostreams-dev
 
+run
+
     ./build_mauve.sh
 
 # OS X INSTALLATION
