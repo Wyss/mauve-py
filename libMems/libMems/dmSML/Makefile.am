@@ -19,4 +19,5 @@ library_include_HEADERS = $(DMSML_H)
 noinst_LTLIBRARIES = libdmSML.la
 libdmSML_la_SOURCES = $(DMSML_SRC)
 
-INCLUDES = -I$(top_srcdir) $(DEPS_CFLAGS)
+#INCLUDES = -I$(top_srcdir) $(DEPS_CFLAGS)
+AM_CPPFLAGS = -I$(top_srcdir) $(DEPS_CFLAGS)

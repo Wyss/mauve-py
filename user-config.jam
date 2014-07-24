@@ -1,0 +1,5 @@
+using clang : 11
+    : "/usr/bin/clang++"
+    : <cxxflags>"-std=c++11 -stdlib=libc++ -ftemplate-depth=512" <linkflags>"-stdlib=libc++"
+    : <define>BOOST_SYSTEM_NO_DEPRECATED
+    ;

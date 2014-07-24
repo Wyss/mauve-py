@@ -239,15 +239,17 @@ void SingleCopyDistanceMatrix( MatchVector& iv_list, std::vector< genome::gnSequ
 						pair_comp[seqI][seqJ].second.set(seqJ_pos-1,true);
 					}
 					if( aln_table[seqI].test(colI) )
-						if( o_i == AbstractMatch::forward )
+						if( o_i == AbstractMatch::forward ) {
 							seqI_pos++;
-						else
+						 } else {
 							seqI_pos--;
+						}
 					if( aln_table[seqJ].test(colI) )
-						if( o_j == AbstractMatch::forward )
+						if( o_j == AbstractMatch::forward ) {
 							seqJ_pos++;
-						else
+						} else {
 							seqJ_pos--;
+						}
 				}
 			}
 		}

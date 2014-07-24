@@ -843,19 +843,21 @@ void neighborhoodListLookup( GappedMatchRecord* M_i,
 		int parity = o_x * direction;
 		int64 match_end = parity == 1 ? M_i->LeftEnd(x) : M_i->RightEnd(x) - seed_size + 1;
 
-		if( match_end > 0 )
+		if( match_end > 0 ) {
 			if( (direction == 1 && left_lookups.test(match_end)) ||
 				(direction == -1 && right_lookups.test(match_end)) )
 			{
-				if(print_warnings)
+				if(print_warnings) {
 					cerr << "looking twice in the same place\n";
 //							genome::breakHere();
-			}else{
+				}
+			} else {
 				if( direction == 1 )
 					left_lookups.set(match_end);
 				if( direction == -1 )
 					right_lookups.set(match_end);
 			}
+		}
 
 		int d = 1;
 		int w_end = parity == 1 ? w : w + seed_size;

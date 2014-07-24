@@ -80,7 +80,10 @@ std::string CreateTempFileName(const std::string& prefix)
 #endif
         boost::filesystem::path path( prefix );
         dir = path.branch_path().string();
-        name = path.leaf();
+
+        // update for BOOST_FILESYSTEM_VERSION=3 from original libMems BOOST_FILESYSTEM_VERSION=2
+        name = path.leaf().string();
+        
         if( name == "/" )
         {
                 dir += name;

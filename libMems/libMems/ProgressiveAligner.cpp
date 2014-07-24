@@ -1599,7 +1599,8 @@ void ProgressiveAligner::constructLcbTrackingMatches(
 		c.SetLeftEnd(child_1, ancestral_matches[mI]->LeftEnd(1));
 		c.SetOrientation(child_1, ancestral_matches[mI]->Orientation(1));
 		c.SetLength(ancestral_matches[mI]->Length(1), child_1);
-		cga_list.push_back(make_tuple(c.Copy(), &bs[mI], ancestral_matches[mI]));
+		// cga_list.push_back(make_tuple(c.Copy(), &bs[mI], ancestral_matches[mI]));
+		cga_list.push_back(_sort_tracker_type(c.Copy(), &bs[mI], ancestral_matches[mI])); // Changed NC
 	}
 
 	stack<node_id_t> node_stack;

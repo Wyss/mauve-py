@@ -41,7 +41,7 @@ cd libMems
 cd ..
 
 cd mauveAligner
-./autogen.sh && ./configure --prefix=$BPATH && cd src && make clean && make mauveStatic && make progressiveMauveStatic
+./autogen.sh && ./configure --prefix=$BPATH && cd src && make clean && make mauveStatic && make progressiveMauveStatic && make install
 cd ..
 
 
