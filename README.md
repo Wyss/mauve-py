@@ -22,6 +22,7 @@ boost requirements for debian linux
 
     libboost-filesystem-dev, libboost-program-options-dev, libboost-iostreams-dev
 
+    ./build_mauve.sh
 
 # OS X INSTALLATION
 make sure you have Homebrew installed on OS X Mavericks
