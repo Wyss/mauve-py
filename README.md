@@ -34,5 +34,5 @@ run
 
 see:
 
--[clang boost ref 1](http://hnrkptrsn.github.io/2013/02/26/c11-and-boost-setup-guide/)
--[clang boost ref 1](http://stackoverflow.com/questions/17884344/why-does-boost-compilation-fails-with-clang)
+-   [clang boost ref 1](http://hnrkptrsn.github.io/2013/02/26/c11-and-boost-setup-guide/)
+-   [clang boost ref 1](http://stackoverflow.com/questions/17884344/why-does-boost-compilation-fails-with-clang)
