@@ -5,4 +5,16 @@
 .DS_Store
 *.la
 *~
+.libs
+.deps
+.svn
+*.status
+*.log
+stamp-h1
+*.pc
+*.cache
+Makefile.in
+libtool
+libtool.m4
+aclocal.m4
 Makefile
