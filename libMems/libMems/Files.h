@@ -23,6 +23,7 @@
 #include "boost/filesystem/operations.hpp"
 #include "boost/filesystem/exception.hpp"
 #include "boost/algorithm/string.hpp"
+
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -162,17 +163,17 @@ std::string CreateTempFileName(const std::string& prefix)
     }
     else // mkstemp() succeeded
     {
-                ret_path = buf;
+        ret_path = buf;
         close(fdTemp);
     }
 #else // !HAVE_MKSTEMP
+    #error "HAVE_MKSTEMP not defined"
+// #ifdef HAVE_MKTEMP
+//     // same as above
+//     if ( mktemp( buf ) )
+//                 ret_path = buf;
 
-#ifdef HAVE_MKTEMP
-    // same as above
-    if ( mktemp( buf ) )
-                ret_path = buf;
-
-#else // !HAVE_MKTEMP (includes __DOS__)
+// #else // !HAVE_MKTEMP (includes __DOS__)
     // generate the unique file name ourselves
     unsigned my_pid = 0;
     #ifndef __DOS__
@@ -196,7 +197,7 @@ std::string CreateTempFileName(const std::string& prefix)
     }
 
     ret_path = oss_str;
-#endif // HAVE_MKTEMP/!HAVE_MKTEMP
+// #endif // HAVE_MKTEMP/!HAVE_MKTEMP
 
 #endif // HAVE_MKSTEMP/!HAVE_MKSTEMP
 

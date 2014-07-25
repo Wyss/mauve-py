@@ -24,7 +24,7 @@ boost requirements for debian linux
 
 run
 
-    ./build_mauve.sh
+    ./build_linux.sh
 
 # OS X INSTALLATION
 make sure you have Homebrew installed on OS X Mavericks
