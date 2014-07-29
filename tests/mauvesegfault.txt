@@ -1,0 +1,10 @@
+Storing raw sequence at /var/folders/9p/4xm9ck3d0wn0x06fsw0hvs8m0000gn/T/rawseqNZW2IN
+Sequence loaded successfully.
+mds42_full.fa 3976195 base pairs.
+Storing raw sequence at /var/folders/9p/4xm9ck3d0wn0x06fsw0hvs8m0000gn/T/rawsequ9wqt3
+Sequence loaded successfully.
+mds42_full_2swaps.fa 3976195 base pairs.
+Using weight 15 mers for initial seeds
+Caught signal 11
+Cleaning up and exiting!
+Temporary files deleted.
