@@ -21,7 +21,9 @@ void print_usage( const char* pname ){
 	cerr << "Usage: " << pname << " <source mauve alignment>  <sequence 1>...<sequence N>\n";
 }
 
+#ifndef NELEMS
 #define NELEMS(a) ( sizeof( a ) / sizeof( *a ) )
+#endif
 
 int main( int argc, const char* argv[] ){
 

@@ -44,7 +44,9 @@ private:
 	MatchList& mlist;
 };
 
+#ifndef NELEMS
 #define NELEMS(a) ( sizeof( a ) / sizeof( *a ) )
+#endif
 
 int main( int argc, char* argv[] ){
 #if	WIN32

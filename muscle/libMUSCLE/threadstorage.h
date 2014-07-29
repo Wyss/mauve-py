@@ -18,8 +18,9 @@
 
 #endif
 
-
-#define NELEMS(o)	sizeof(o)/sizeof(o[0])
+#ifndef NELEMS
+#define NELEMS(o)	(sizeof(o)/sizeof(o[0]))
+#endif
 
 template<typename T>
 class TLS

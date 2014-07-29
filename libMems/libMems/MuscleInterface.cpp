@@ -1186,6 +1186,7 @@ void MuscleInterface::CreateTree( const NumericMatrix<double>& distances, const 
 	tt.FromClust( crusty );
 	TextFile tf( tree_filename.c_str(), true );
 	tt.ToFile( tf );
+	// tf.Close(); // added NC
 }
 
 

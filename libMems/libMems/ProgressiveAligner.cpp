@@ -40,6 +40,7 @@
 #include <limits>
 #include <iomanip>
 
+#include <stdio.h>
 #include "stdlib.h"
 
 using namespace std;
@@ -3852,10 +3853,13 @@ void ProgressiveAligner::align( vector< gnSequence* >& seq_table, IntervalList& 
 	cout << "reading tree...\n";
 	// load the guide tree
 	ifstream tree_file( input_guide_tree_fname.c_str() );
-	if( !tree_file.is_open() )
+	if( !tree_file.is_open() ) {
 		throw "Error opening guide tree file";
+	}
 	alignment_tree.readTree( tree_file );
+
 	tree_file.close();
+	// while(tree_file.is_open()) {};
 
 	cout << "initializing alignment tree...\n";
 	node_id_t node1;
@@ -3873,16 +3877,19 @@ void ProgressiveAligner::align( vector< gnSequence* >& seq_table, IntervalList& 
 	// write out the rooted guide tree, but don't clobber the user's input tree
 	if( !input_tree_specified || output_tree_specified )
 	{
-		ofstream out_tree_file( output_guide_tree_fname.c_str() );
-		if( !out_tree_file.is_open() )
+		ofstream out_tree_file( output_guide_tree_fname.c_str(), ofstream::out );
+		if( !out_tree_file.is_open() ) {
 			throw "Error opening guide tree file for write";
+		}
 		alignment_tree.writeTree( out_tree_file );
 		out_tree_file.close();
+		// while(out_tree_file.is_open()) {};
 	}
+	// cout << "made it this far poop 1" << endl;
+	// fflush(stdout);
 
 	// ensure the root is the last to get aligned and swap children to canonical order
 	extendRootBranches(alignment_tree);
-
 
 	if( !collinear_genomes )
 	{
@@ -3906,12 +3913,12 @@ void ProgressiveAligner::align( vector< gnSequence* >& seq_table, IntervalList& 
 		}
 //		w11_mlist.sml_table.clear();
 	}
+
 	if( !collinear_genomes && use_weight_scaling )
 	{
 		cout << "Calculating pairwise breakpoint distances\n";
 		CreatePairwiseBPDistance(bp_distance);
 	}
-
 	// rescale the conservation distance
 	if( use_weight_scaling )
 	{
@@ -3937,7 +3944,6 @@ void ProgressiveAligner::align( vector< gnSequence* >& seq_table, IntervalList& 
 		print2d_matrix(bp_distance, cout);
 		cout << endl;
 	}
-
 	getAlignment( interval_list );
 }
 

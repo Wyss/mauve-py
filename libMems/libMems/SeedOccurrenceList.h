@@ -65,13 +65,15 @@ public:
 
 		// create a temporary memory-mapped file to store mer counts
 		tmpfile = CreateTempFileName("sol");
+		{
 		// resize the file to be big
 		std::ofstream tfout;
 		tfout.open(tmpfile.c_str(), std::ios::binary );
 		tfout.write(((const char*)count), sml.Length()*sizeof(frequency_type));
 		tfout.close();
+		}
 		delete[] count;
-
+		data.close();			// added NC make sure file is closed
 		data.open( tmpfile );	// map the file
 	}
 
