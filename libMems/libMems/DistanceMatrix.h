@@ -225,31 +225,35 @@ void SingleCopyDistanceMatrix( MatchVector& iv_list, std::vector< genome::gnSequ
 				gnSeqI seqJ_pos = iv_list[ivI]->LeftEnd(seqJ);
 				AbstractMatch::orientation o_i = iv_list[ivI]->Orientation(seqI);
 				AbstractMatch::orientation o_j = iv_list[ivI]->Orientation(seqJ);
-				if( o_i == AbstractMatch::reverse )
+				if( o_i == AbstractMatch::reverse ) {
 					seqI_pos = iv_list[ivI]->RightEnd(seqI);
-				if( o_j == AbstractMatch::reverse )
+				}
+				if( o_j == AbstractMatch::reverse ) {
 					seqJ_pos = iv_list[ivI]->RightEnd(seqJ);
-				if( seqI_pos == NO_MATCH || seqJ_pos == NO_MATCH )
+				}
+				if( seqI_pos == NO_MATCH || seqJ_pos == NO_MATCH ) {
 					continue;
+				}
 				for( size_t colI = 0; colI < aln_table[seqI].size(); ++colI )
 				{
-					if( aln_table[seqI].test(colI) && aln_table[seqJ].test(colI) )
-					{
+					if( aln_table[seqI].test(colI) && aln_table[seqJ].test(colI) ) {
 						pair_comp[seqI][seqJ].first.set(seqI_pos-1,true);
 						pair_comp[seqI][seqJ].second.set(seqJ_pos-1,true);
 					}
-					if( aln_table[seqI].test(colI) )
+					if( aln_table[seqI].test(colI) ) {
 						if( o_i == AbstractMatch::forward ) {
 							seqI_pos++;
 						 } else {
 							seqI_pos--;
 						}
-					if( aln_table[seqJ].test(colI) )
+					}
+					if( aln_table[seqJ].test(colI) ) {
 						if( o_j == AbstractMatch::forward ) {
 							seqJ_pos++;
 						} else {
 							seqJ_pos--;
 						}
+					}
 				}
 			}
 		}

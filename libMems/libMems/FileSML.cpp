@@ -12,6 +12,8 @@
 #include "libMems/Aligner.h"
 #include "libGenome/gnFilter.h"
 #include "libGenome/gnRAWSource.h"
+#include "libGenome/gnException.h"
+#include "libGenome/gnExceptionCode.h"
 #include <algorithm>
 #include <cmath>
 #include "boost/filesystem/operations.hpp"
@@ -45,14 +47,19 @@ void FileSML::Clear() {
 
 void FileSML::LoadFile(const string& fname){
 	filename = fname;
+	sarfile.clear();
 	sarfile.open(fname.c_str(), ios::binary | ios::in );
+	std::cout << "LoadFile " << fname << std::endl;
 	if(!sarfile.is_open()){
+		std::cout << "LoadFile poop " << fname << std::endl;
 		sarfile.clear();
 		Throw_gnExMsg( FileNotOpened(), "Unable to open file.\n");
 	}
+	std::cout << "LoadFile 1 " << std::endl;
 	// read the header into a temporary header struct just
 	// in case it's bogus
 	SMLHeader tmp_header;
+	std::cout << "LoadFile 2 " << std::endl;
 	sarfile.read((char*)&tmp_header, sizeof(struct SMLHeader));
 	if(sarfile.gcount() < (int)sizeof(struct SMLHeader)){
 		sarfile.clear();
@@ -79,13 +86,13 @@ void FileSML::LoadFile(const string& fname){
 	if(sequence != NULL)
 		delete[] sequence;
 	sequence = new uint32[binary_seq_len];
-
+	std::cout << "LoadFile 3 " << std::endl;
 	sarfile.read((char*)sequence, binary_seq_len*sizeof(uint32));
 	if(sarfile.gcount() < (int64)(binary_seq_len*sizeof(uint32))){
 		sarfile.clear();
 		Throw_gnExMsg( FileUnreadable(), "Error reading sequence data.");
 	}
-
+	std::cout << "LoadFile 4 " << std::endl;
 	sarray_start_offset = sarfile.tellg();
 	sarfile.seekg(sarray_start_offset + sizeof(gnSeqI) * header.length);
 	if(!sarfile.good()){
@@ -95,12 +102,14 @@ void FileSML::LoadFile(const string& fname){
 	filename = fname;
 
 	// create a memory-map to the data of interest
+	std::cout << "LoadFile 5 " << std::endl;
 	sardata.open(fname);
-	
+	std::cout << "LoadFile 6 " << std::endl;
+
 	// check whether there is a .coords mask file to read
 	string coordfile = filename + ".coords";
 	ifstream coord_in( coordfile.c_str() );
-	if( coord_in.is_open() ){
+	if( coord_in.is_open() ) {
 		seq_coords.clear();
 		int64 cur_coord;
 		while( coord_in >> cur_coord ){

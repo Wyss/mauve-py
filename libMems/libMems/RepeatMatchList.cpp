@@ -79,7 +79,7 @@ void RepeatMatchList::LoadSMLs( uint mer_size, ostream* log_stream ){
 			(*log_stream) << "Using weight " << mer_size << " mers for initial seeds\n";
 		}
 	}
-
+	// std::cout << "loadsmls" << std::endl;
 	// load and creates SMLs as necessary
 	//punt: tjt
 	//uint64 default_seed = getSeed( mer_size );

@@ -37,13 +37,13 @@ echo "Begin libMems"
 cd libMems
 # ./autogen.sh && ./configure --prefix=$BPATH --with-boost=$HOME && make clean && make -j2 install
 # ./autogen.sh && ./configure --prefix=$BPATH && make clean && make -j2 install
-./autogen.sh && ./configure --prefix=$BPATH && make clean && make -j4 install
+./autogen.sh && ./configure --prefix=$BPATH && make clean && make -j2 install
 cd ..
 echo "End libMems"
 
 echo "Begin mauveAligner"
 cd mauveAligner
 # ./autogen.sh && ./configure --prefix=$BPATH && cd src && make clean && make progressiveMauveStatic install
-./autogen.sh && ./configure --prefix=$BPATH && cd src && make clean && make -j4 progressiveMauveStatic install
+./autogen.sh && ./configure --prefix=$BPATH && cd src && make clean && make -j2 progressiveMauveStatic install
 echo "End mauveAligner"
 

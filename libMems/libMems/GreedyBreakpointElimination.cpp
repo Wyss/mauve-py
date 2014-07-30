@@ -192,44 +192,51 @@ uint RemoveLCBandCoalesce( size_t lcbI, uint seq_count, LcbVector& adjacencies, 
 	removed_count++;
 
 	// check for collapse
-	for( seqI = 0; seqI < seq_count; seqI++ ){
+	for( seqI = 0; seqI < seq_count; seqI++ ) {
 		left_adj = adjacencies[ lcbI ].left_adjacency[ seqI ];
 		right_adj = adjacencies[ lcbI ].right_adjacency[ seqI ];
 		// find the real slim shady
-		while( left_adj != -1 && adjacencies[ left_adj ].lcb_id != left_adj )
+		while( left_adj != -1 && adjacencies[ left_adj ].lcb_id != left_adj ) {
 			left_adj = adjacencies[ left_adj ].left_adjacency[ seqI ];
-		while( right_adj != -1 && adjacencies[ right_adj ].lcb_id != right_adj )
+		}
+		while( right_adj != -1 && adjacencies[ right_adj ].lcb_id != right_adj ) {
 			right_adj = adjacencies[ right_adj ].right_adjacency[ seqI ];
-		if( left_adj == -1 || right_adj == -1 )
+		}
+		if( left_adj == -1 || right_adj == -1 ) {
 			continue;	// can't collapse with a non-existant LCB!
+		}
 		if( adjacencies[ left_adj ].lcb_id != left_adj ||
-			adjacencies[ right_adj ].lcb_id != right_adj )
-			if( seqI > 0 )
+			adjacencies[ right_adj ].lcb_id != right_adj ) {
+			if( seqI > 0 ) {
 				continue;	// already coalesced
-			else
+			} else {
 				cerr << "trouble on down street\n";
-
+			}
+		}
 		// check whether the two LCBs are adjacent in each sequence
 		boolean orientation = adjacencies[ left_adj ].left_end[ seqI ] > 0 ? true : false;
 		uint seqJ;
-		for( seqJ = 0; seqJ < seq_count; seqJ++ ){
+		for( seqJ = 0; seqJ < seq_count; seqJ++ ) {
 			boolean j_orientation = adjacencies[ left_adj ].left_end[ seqJ ] > 0;
 			if( j_orientation == orientation &&
-				adjacencies[ left_adj ].right_adjacency[ seqJ ] != right_adj )
+				adjacencies[ left_adj ].right_adjacency[ seqJ ] != right_adj ) {
 				break;
+			}
 			if( j_orientation != orientation &&
-				adjacencies[ left_adj ].left_adjacency[ seqJ ] != right_adj )
+				adjacencies[ left_adj ].left_adjacency[ seqJ ] != right_adj ) {
 				break;
+			}
 			// check that they are both in the same orientation
-			if( adjacencies[ right_adj ].left_end[ seqJ ] > 0 != j_orientation )
+			if( adjacencies[ right_adj ].left_end[ seqJ ] > 0 != j_orientation ) {
 				break;
+			}
 		}
 
 		if( seqJ != seq_count ||
 			adjacencies[ left_adj ].to_be_deleted ||
-			adjacencies[ right_adj ].to_be_deleted )
+			adjacencies[ right_adj ].to_be_deleted ) {
 			continue;	// if these two aren't collinear, or one or both will get deleted, then don't coalesce
-		
+		}
 
 		// these two can be coalesced
 		// do it.  do it now.
@@ -240,20 +247,22 @@ uint RemoveLCBandCoalesce( size_t lcbI, uint seq_count, LcbVector& adjacencies, 
 
 		// unlink right_adj from the adjacency list and
 		// update left and right ends of left_adj
-		for( seqJ = 0; seqJ < seq_count; seqJ++ ){
+		for( seqJ = 0; seqJ < seq_count; seqJ++ ) {
 			boolean j_orientation = adjacencies[ left_adj ].left_end[ seqJ ] > 0;
 			uint rr_adj = adjacencies[ right_adj ].right_adjacency[ seqJ ];
 			uint rl_adj = adjacencies[ right_adj ].left_adjacency[ seqJ ];
 			if( j_orientation == orientation ){
 				adjacencies[ left_adj ].right_end[ seqJ ] = adjacencies[ right_adj ].right_end[ seqJ ];
 				adjacencies[ left_adj ].right_adjacency[ seqJ ] = rr_adj;
-				if( rr_adj != -1 )
+				if( rr_adj != -1 ) {
 					adjacencies[ rr_adj ].left_adjacency[ seqJ ] = left_adj;
-			}else{
+				}
+			} else {
 				adjacencies[ left_adj ].left_end[ seqJ ] = adjacencies[ right_adj ].left_end[ seqJ ];
 				adjacencies[ left_adj ].left_adjacency[ seqJ ] = rl_adj;
-				if( rl_adj != -1 )
+				if( rl_adj != -1 ) {
 					adjacencies[ rl_adj ].right_adjacency[ seqJ ] = left_adj;
+				}
 			}
 		}
 		// just coalesced two LCBs...
@@ -290,7 +299,7 @@ void undoLcbRemoval( uint seq_count, LcbVector& adjs, std::vector< std::pair< ui
 			}
 			adjs[lcbI].lcb_id = lcbI;	// reset the lcb id
 			adjs[lcbI].to_be_deleted = false;	// no longer TBD
-		}else{
+		} else {
 			// this one was coalesced
 			// uncoalesce it
 			uint lcbI = id_remaps[rI-1].first;

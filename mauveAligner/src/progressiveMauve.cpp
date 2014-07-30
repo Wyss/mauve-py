@@ -12,6 +12,7 @@
 
 #include "mauveAligner.h"
 #include "getopt.h"
+#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include "libMems/Matrix.h"
@@ -444,6 +445,7 @@ int doAlignment( int argc, char* argv[] ){
 		// testing: rewrite seq files in RAW format
 		LoadAndCreateRawSequences( pairwise_match_list, &cout );
 //		LoadSequences( pairwise_match_list, &cout );
+		std::cout << "pma LoadSMLs" << std::endl;
 		if(opt_solid_seeds.set)
 			pairwise_match_list.LoadSMLs( mer_size, &cout, SOLID_SEED, true );
 		else if(opt_coding_seeds.set)
@@ -529,19 +531,21 @@ int doAlignment( int argc, char* argv[] ){
 			MatchList cur_list;
 			cur_list.seq_filename = pairwise_match_list.seq_filename;
 			cur_list.seq_table = pairwise_match_list.seq_table;
-			if( seq_files.size() == 1 )
+			if( seq_files.size() == 1 ) {
 				cur_list.CreateMemorySMLs( mer_size, &cout, length_ranks[seedI].second );
-			else
-			{
+			} else {
 				getDefaultSmlFileNames( cur_list.seq_filename, cur_list.sml_filename, mer_size, length_ranks[seedI].second );
+				std::cout << "pma LoadSMLs 2" << std::endl;
 				cur_list.LoadSMLs(mer_size, &cout, length_ranks[seedI].second);
 			}
 			umf.FindMatches( cur_list );
 			umf.ClearSequences();
-			for( size_t smlI = 0; smlI < cur_list.sml_table.size(); smlI++ )
+			for( size_t smlI = 0; smlI < cur_list.sml_table.size(); smlI++ ) {
 				delete cur_list.sml_table[smlI];	// free memory
-			for( size_t curI = 0; curI < cur_list.size(); curI++ )
+			}
+			for( size_t curI = 0; curI < cur_list.size(); curI++ ) {
 				cur_list[curI]->Free();	// free more memory!
+			}
 		}
 		umf.GetMatchList(pairwise_match_list);
 		cout << "done\n";

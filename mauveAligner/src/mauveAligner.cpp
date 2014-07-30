@@ -12,6 +12,7 @@
 
 #include "mauveAligner.h"
 #include "getopt.h"
+#include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include "libGenome/gnSequence.h"
@@ -463,6 +464,7 @@ try{
 		match_list.seq_filename = seq_files;
 		match_list.sml_filename = sml_files;
 		LoadSequences( match_list, &cout );
+		// std::cout << "mauveAligner LoadSMLs" << std::endl;
 		if( find_repeats || !read_matches || ( !read_lcbs && !read_matches ) )
 			match_list.LoadSMLs( seed_size, &cout, seed_rank );
 	}

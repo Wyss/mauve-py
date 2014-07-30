@@ -19,6 +19,9 @@
 #include "libMems/DNAFileSML.h"
 #include "libMems/DNAMemorySML.h"
 #include "libGenome/gnSequence.h"
+#include "libGenome/gnException.h"
+#include "libGenome/gnExceptionCode.h"
+
 #include "libMems/Match.h"
 #include "libMems/gnRAWSequence.h"
 #include "libGenome/gnRAWSource.h"
@@ -268,41 +271,49 @@ void GenericMatchList< MatchPtrType >::LoadSMLs( uint mer_size, std::ostream* lo
 			(*log_stream) << "Using weight " << mer_size << " mers for initial seeds\n";
 		}
 	}
-
+	std::cout << "gml" << std::endl;
 	// load and creates SMLs as necessary
 	uint64 default_seed = getSeed( mer_size, seed_rank );
 	if (solid)
 		uint64 default_seed = getSolidSeed( mer_size );
 	std::vector< uint > create_list;
 	uint seqI = 0;
+	std::cout << "gml 0" << std::endl;
 	for( seqI = 0; seqI < seq_table.size(); seqI++ ){
 		// define a DNAFileSML to store a sorted mer list
 		DNAFileSML* file_sml = new DNAFileSML();
 		sml_table.push_back( file_sml );
 
 		boolean success = true;
-		try{
+		try {
+			std::cout << "gml 1 " << seqI << std::endl;
+			file_sml->Clear();
 			file_sml->LoadFile( sml_filename[ seqI ] );
-		}catch( genome::gnException& gne ){
+		} catch( genome::gnException& gne ){
 			success = false;
+			std::cout << "gml 1 b" << seqI << std::endl;
 			create_list.push_back( seqI );
 		}
+		// std::cout << "gml 2" << std::endl;
 		boolean recreate = false;
-		if(success && force_create){
-			if( log_stream != NULL )
+		if(success && force_create) {
+			if( log_stream != NULL ) {
 				(*log_stream) << "SML exists, but forcefully recreating.  A new sorted mer list will be created.\n";
+			}
 			recreate = true;
 			create_list.push_back( seqI );
 		}
-		else if(success && (file_sml->Seed() != default_seed )){
-			if( log_stream != NULL )
+		else if(success && (file_sml->Seed() != default_seed )) {
+			if( log_stream != NULL ) {
 				(*log_stream) << "Default seed mismatch.  A new sorted mer list will be created.\n";
+			}
 			recreate = true;
 			create_list.push_back( seqI );
 		}
 
-		if( success && !recreate && log_stream != NULL && !force_create )
+		if( success && !recreate && log_stream != NULL && !force_create ) {
 			(*log_stream) << "Sorted mer list loaded successfully\n";
+		}
 	}
 
 	// free up memory before creating any SMLs
