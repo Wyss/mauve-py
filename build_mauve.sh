@@ -21,17 +21,17 @@ export PKG_CONFIG_PATH=$BPATH/lib/pkgconfig
 # 3. libMems
 # 4. mauveAligner
 
-# echo "Begin libGenome"
-# cd libGenome
-# ./autogen.sh && ./configure --prefix=$BPATH && make clean && make -j2 install
-# cd ..
-# echo "End libGenome"
+echo "Begin libGenome"
+cd libGenome
+./autogen.sh && ./configure --prefix=$BPATH && make clean && make -j2 install
+cd ..
+echo "End libGenome"
 
-# echo "Begin muscle"
-# cd muscle
-# ./autogen.sh && ./configure --prefix=$BPATH && make clean && make -j4 && make install
-# cd ..
-# echo "End muscle"
+echo "Begin muscle"
+cd muscle
+./autogen.sh && ./configure --prefix=$BPATH && make clean && make -j4 ; make && make install
+cd ..
+echo "End muscle"
 
 echo "Begin libMems"
 cd libMems
