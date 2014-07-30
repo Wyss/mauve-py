@@ -489,7 +489,7 @@ boolean FileSML::Read(vector<bmer>& readVector, gnSeqI size, const gnSeqI offset
 		tmp_mer.position = base()[offset+j];
 		if( tmp_mer.position > header.length ){
 			string errmsg = "Corrupted SML, position ";
-			errmsg += tmp_mer.position + " is out of range\n";
+			errmsg += std::to_string(tmp_mer.position) + " is out of range\n";
 			ErrorMsg( errmsg );
 			cerr << errmsg;
 		}else

@@ -92,12 +92,19 @@ void RepeatMatchList::LoadSMLs( uint mer_size, ostream* log_stream ){
 		sml_table.push_back( file_sml );
 
 		boolean success = true;
-		try{
-			file_sml->LoadFile( sml_filename[ seqI ] );
-		}catch( gnException& gne ){
+		// NC commented out as in MatchList.h switch to return code style errors
+		// try{
+		// 	file_sml->LoadFile( sml_filename[ seqI ] );
+		// }catch( gnException& gne ){
+		// 	success = false;
+		// 	create_list.push_back( seqI );
+		// }
+
+		if (file_sml->LoadFile2(sml_filename[ seqI ])) {
 			success = false;
 			create_list.push_back( seqI );
 		}
+
 		boolean recreate = false;
 		if(success && (file_sml->Seed() != default_seed )){
 			if( log_stream != NULL )
