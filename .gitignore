@@ -18,3 +18,4 @@ libtool
 libtool.m4
 aclocal.m4
 Makefile
+*.pyc
