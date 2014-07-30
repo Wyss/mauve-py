@@ -5,8 +5,8 @@
 # brew install pkg-config
 # brew install libtool
 
-export CFLAGS="-O3 -arch x86_64 -mmacosx-version-min=10.9"
-export CXXFLAGS="-O3 -arch x86_64 -mmacosx-version-min=10.9 -DBOOST_SYSTEM_NO_DEPRECATED -DHAVE_MKSTEMP "
+export CFLAGS="-O3 -arch x86_64 -mmacosx-version-min=10.9 "
+export CXXFLAGS="-O3 -arch x86_64 -mmacosx-version-min=10.9 -fcxx-exceptions -DBOOST_SYSTEM_NO_DEPRECATED -DHAVE_MKSTEMP "
 export CXX="clang++ -std=c++11 -stdlib=libc++"
 # export BJAMFLAGS=" --toolset=darwin --user-config=${BPATH}/user-config.jam  link=static threading=single "
 BPATH=`pwd`

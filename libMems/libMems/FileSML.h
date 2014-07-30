@@ -49,6 +49,9 @@ public:
 	 * @throws FileUnreadable thrown if the file was corrupt or not a sorted mer list
 	 */
 	virtual void LoadFile(const std::string& fname);
+	virtual int LoadFile2(const std::string& fname);
+
+
 	/**
 	 * Creates large sorted mer lists which do not fit entirely in memory.
 	 * BigCreate uses an external mergesort to create large sorted mer lists.

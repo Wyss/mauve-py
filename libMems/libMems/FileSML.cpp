@@ -49,17 +49,17 @@ void FileSML::LoadFile(const string& fname){
 	filename = fname;
 	sarfile.clear();
 	sarfile.open(fname.c_str(), ios::binary | ios::in );
-	std::cout << "LoadFile " << fname << std::endl;
+
 	if(!sarfile.is_open()){
-		std::cout << "LoadFile poop " << fname << std::endl;
 		sarfile.clear();
+		// issues with clang catching this exception
+		std::cout << "Failure here on OSX " << fname << std::endl;
 		Throw_gnExMsg( FileNotOpened(), "Unable to open file.\n");
 	}
-	std::cout << "LoadFile 1 " << std::endl;
+
 	// read the header into a temporary header struct just
 	// in case it's bogus
 	SMLHeader tmp_header;
-	std::cout << "LoadFile 2 " << std::endl;
 	sarfile.read((char*)&tmp_header, sizeof(struct SMLHeader));
 	if(sarfile.gcount() < (int)sizeof(struct SMLHeader)){
 		sarfile.clear();
@@ -86,25 +86,24 @@ void FileSML::LoadFile(const string& fname){
 	if(sequence != NULL)
 		delete[] sequence;
 	sequence = new uint32[binary_seq_len];
-	std::cout << "LoadFile 3 " << std::endl;
+
 	sarfile.read((char*)sequence, binary_seq_len*sizeof(uint32));
-	if(sarfile.gcount() < (int64)(binary_seq_len*sizeof(uint32))){
+	if(sarfile.gcount() < (int64)(binary_seq_len*sizeof(uint32))) {
 		sarfile.clear();
 		Throw_gnExMsg( FileUnreadable(), "Error reading sequence data.");
 	}
-	std::cout << "LoadFile 4 " << std::endl;
+
 	sarray_start_offset = sarfile.tellg();
 	sarfile.seekg(sarray_start_offset + sizeof(gnSeqI) * header.length);
-	if(!sarfile.good()){
+	if(!sarfile.good()) {
 		sarfile.clear();
 		Throw_gnExMsg( FileUnreadable(), "Premature end of file.");
 	}
 	filename = fname;
 
 	// create a memory-map to the data of interest
-	std::cout << "LoadFile 5 " << std::endl;
 	sardata.open(fname);
-	std::cout << "LoadFile 6 " << std::endl;
+
 
 	// check whether there is a .coords mask file to read
 	string coordfile = filename + ".coords";
@@ -116,6 +115,83 @@ void FileSML::LoadFile(const string& fname){
 			seq_coords.push_back( cur_coord );
 		}
 	}
+}
+
+int FileSML::LoadFile2(const string& fname){
+	filename = fname;
+	sarfile.clear();
+	sarfile.open(fname.c_str(), ios::binary | ios::in );
+
+	if(!sarfile.is_open()){
+		sarfile.clear();
+		std::cout << "Intentional IO Failure " << fname << std::endl;
+		return 1;
+		// Throw_gnExMsg( FileNotOpened(), "Unable to open file.\n");
+	}
+
+	// read the header into a temporary header struct just
+	// in case it's bogus
+	SMLHeader tmp_header;
+
+	sarfile.read((char*)&tmp_header, sizeof(struct SMLHeader));
+	if(sarfile.gcount() < (int)sizeof(struct SMLHeader)){
+		sarfile.clear();
+		return 2;
+		//Throw_gnExMsg( FileUnreadable(), "Unable to read file.");
+	}
+	if(tmp_header.version != FormatVersion()){
+		return 3;
+		//Throw_gnExMsg( FileUnreadable(), "Unsupported file format.");
+	}
+	header = tmp_header;
+	
+	SetMerMaskSize( header.seed_weight );
+	seed_mask = mer_mask;
+	SetMerMaskSize( header.seed_length );
+
+	//header is ok.  read the sequence.
+	gnSeqI seq_len = header.length;
+	if(header.circular)
+		seq_len += header.seed_length - 1;
+	binary_seq_len = ((uint64)seq_len * (uint64)header.alphabet_bits) / 32;
+	if(((uint64)seq_len * (uint64)header.alphabet_bits) % 32 != 0)
+		binary_seq_len++;
+	binary_seq_len+=2;	//fix for access violations.
+
+	if(sequence != NULL)
+		delete[] sequence;
+	sequence = new uint32[binary_seq_len];
+
+	sarfile.read((char*)sequence, binary_seq_len*sizeof(uint32));
+	if(sarfile.gcount() < (int64)(binary_seq_len*sizeof(uint32))) {
+		sarfile.clear();
+		return 4;
+		// Throw_gnExMsg( FileUnreadable(), "Error reading sequence data.");
+	}
+
+	sarray_start_offset = sarfile.tellg();
+	sarfile.seekg(sarray_start_offset + sizeof(gnSeqI) * header.length);
+	if(!sarfile.good()) {
+		sarfile.clear();
+		return 5;
+		// Throw_gnExMsg( FileUnreadable(), "Premature end of file.");
+	}
+	filename = fname;
+
+	// create a memory-map to the data of interest
+	sardata.open(fname);
+
+	// check whether there is a .coords mask file to read
+	string coordfile = filename + ".coords";
+	ifstream coord_in( coordfile.c_str() );
+	if( coord_in.is_open() ) {
+		seq_coords.clear();
+		int64 cur_coord;
+		while( coord_in >> cur_coord ){
+			seq_coords.push_back( cur_coord );
+		}
+	}
+	return 0;
 }
 
 void FileSML::OpenForWriting( boolean truncate ){

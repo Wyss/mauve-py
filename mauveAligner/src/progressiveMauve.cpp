@@ -445,7 +445,7 @@ int doAlignment( int argc, char* argv[] ){
 		// testing: rewrite seq files in RAW format
 		LoadAndCreateRawSequences( pairwise_match_list, &cout );
 //		LoadSequences( pairwise_match_list, &cout );
-		std::cout << "pma LoadSMLs" << std::endl;
+		// std::cout << "pma LoadSMLs" << std::endl;
 		if(opt_solid_seeds.set)
 			pairwise_match_list.LoadSMLs( mer_size, &cout, SOLID_SEED, true );
 		else if(opt_coding_seeds.set)

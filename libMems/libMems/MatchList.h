@@ -271,30 +271,42 @@ void GenericMatchList< MatchPtrType >::LoadSMLs( uint mer_size, std::ostream* lo
 			(*log_stream) << "Using weight " << mer_size << " mers for initial seeds\n";
 		}
 	}
-	std::cout << "gml" << std::endl;
+
 	// load and creates SMLs as necessary
 	uint64 default_seed = getSeed( mer_size, seed_rank );
 	if (solid)
 		uint64 default_seed = getSolidSeed( mer_size );
 	std::vector< uint > create_list;
 	uint seqI = 0;
-	std::cout << "gml 0" << std::endl;
+
 	for( seqI = 0; seqI < seq_table.size(); seqI++ ){
 		// define a DNAFileSML to store a sorted mer list
 		DNAFileSML* file_sml = new DNAFileSML();
 		sml_table.push_back( file_sml );
 
 		boolean success = true;
-		try {
-			std::cout << "gml 1 " << seqI << std::endl;
-			file_sml->Clear();
-			file_sml->LoadFile( sml_filename[ seqI ] );
-		} catch( genome::gnException& gne ){
+
+		/* Commented out NC, this is an intentional exception throw/catch
+		* to detect that a .sslist file is not already created and readable.
+		* this runtime fails for me always on OS X Clang 5.1 (not linux gcc) 
+		* so I created 
+		* LoadFile2 that just ses return codes (shorter anyway)
+		*/
+		// try {
+		// 	std::cout << "gml 1 " << seqI << std::endl;
+		// 	file_sml->Clear();
+		// 	file_sml->LoadFile( sml_filename[ seqI ] );
+		// } catch( genome::gnException& gne ){
+		// 	success = false;
+		// 	std::cout << "gml 1 b" << seqI << std::endl;
+		// 	create_list.push_back( seqI );
+		// }
+
+		if (file_sml->LoadFile2(sml_filename[ seqI ])) {
 			success = false;
-			std::cout << "gml 1 b" << seqI << std::endl;
 			create_list.push_back( seqI );
 		}
-		// std::cout << "gml 2" << std::endl;
+
 		boolean recreate = false;
 		if(success && force_create) {
 			if( log_stream != NULL ) {
@@ -318,40 +330,40 @@ void GenericMatchList< MatchPtrType >::LoadSMLs( uint mer_size, std::ostream* lo
 
 	// free up memory before creating any SMLs
 	if( create_list.size() > 0 )
-		for( seqI = 0; seqI < sml_table.size(); seqI++ ){
+		for( seqI = 0; seqI < sml_table.size(); seqI++ ) {
 			sml_table[ seqI ]->Clear();
 			delete sml_table[ seqI ];
 			sml_table[ seqI ] = NULL;
 		}
 	
 	// create any SMLs that need to be created
-	for( uint createI = 0; createI < create_list.size(); createI++ ){
+	for( uint createI = 0; createI < create_list.size(); createI++ ) {
 		if( log_stream != NULL )
 			(*log_stream) << "Creating sorted mer list\n";
-		try{
-
-		time_t start_time = time(NULL);
-		sml_table[ create_list[ createI ] ] = new DNAFileSML( sml_filename[ create_list[ createI ] ] );
-		sml_table[ create_list[ createI ] ]->Create( *seq_table[ create_list[ createI ] ], default_seed );
-		time_t end_time = time(NULL);
-	 	if( log_stream != NULL )
-			(*log_stream) << "Create time was: " << end_time - start_time << " seconds.\n";
 		
-		}catch(...){
+		try {
+			time_t start_time = time(NULL);
+			sml_table[ create_list[ createI ] ] = new DNAFileSML( sml_filename[ create_list[ createI ] ] );
+			sml_table[ create_list[ createI ] ]->Create( *seq_table[ create_list[ createI ] ], default_seed );
+			time_t end_time = time(NULL);
+		 	if( log_stream != NULL ) {
+				(*log_stream) << "Create time was: " << end_time - start_time << " seconds.\n";
+			}
+		} catch(...) {
 			std::cerr << "Error creating sorted mer list\n";
 			throw;
 		}
 	}
 	
 	// reload the other SMLs now that creation has completed
-	if( create_list.size() > 0 ){
+	if( create_list.size() > 0 ) {
 		for( seqI = 0; seqI < seq_filename.size(); seqI++ ){
 			if( sml_table[ seqI ] != NULL )
 				continue;
 			sml_table[ seqI ] = new DNAFileSML( sml_filename[ seqI ] );
-			try{
+			try {
 				((DNAFileSML*)sml_table[ seqI ])->LoadFile( sml_filename[ seqI ] );
-			}catch( genome::gnException& gne ){
+			} catch( genome::gnException& gne ) {
 				std::cerr << "Error loading sorted mer list\n";
 				throw;
 			}
