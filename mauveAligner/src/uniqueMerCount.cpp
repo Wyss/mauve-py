@@ -29,13 +29,22 @@ int main( int argc, const char* argv[] ){
 	string sml_filename = argv[1];
 	DNAFileSML* file_sml = new DNAFileSML();
 	boolean success = true;
-	try{
-		file_sml->LoadFile( sml_filename );
-	}catch( gnException& gne ){
+	// NC Commented out as in MatchList.h switch to return code style errors
+	// try{
+	// 	file_sml->LoadFile( sml_filename );
+	// }catch( gnException& gne ){
+	// 	success = false;
+	// 	cerr << gne << endl;
+	// 	return -1;
+	// }
+
+	int rc;
+	if (rc = file_sml->LoadFile2(sml_filename)) {
 		success = false;
-		cerr << gne << endl;
+		cerr << "Error FileSML::LoadFile2" << rc << endl;
 		return -1;
 	}
+
 	cout << endl << file_sml->UniqueMerCount() << endl;
 }
 

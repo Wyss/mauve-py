@@ -290,13 +290,16 @@ void GenericMatchList< MatchPtrType >::LoadSMLs( uint mer_size, std::ostream* lo
 		* to detect that a .sslist file is not already created and readable.
 		* this runtime fails for me always on OS X Clang 5.1 (not linux gcc) 
 		* so I created 
-		* LoadFile2 that just ses return codes (shorter anyway)
+		* LoadFile2 that just uses return codes (shorter anyway)
 		*/
+		// switch to const exception catch per 
+		// comment here seems to work
+		// http://thomas-sanchez.net/computer-sciences/2011/07/25/cpp-and-exception-on-mac-os-x-lion/
 		// try {
-		// 	std::cout << "gml 1 " << seqI << std::endl;
+		// 	std::cout << "gml dodosod 1 " << seqI << std::endl;
 		// 	file_sml->Clear();
 		// 	file_sml->LoadFile( sml_filename[ seqI ] );
-		// } catch( genome::gnException& gne ){
+		// } catch(  const genome::gnException& gne ){
 		// 	success = false;
 		// 	std::cout << "gml 1 b" << seqI << std::endl;
 		// 	create_list.push_back( seqI );
