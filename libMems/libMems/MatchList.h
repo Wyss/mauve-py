@@ -270,6 +270,8 @@ void GenericMatchList< MatchPtrType >::LoadSMLs( uint mer_size, std::ostream* lo
 		if( log_stream != NULL ){
 			(*log_stream) << "Using weight " << mer_size << " mers for initial seeds\n";
 		}
+	} else {
+		(*log_stream) << "Using provided weight " << mer_size << " mers at rank " << seed_rank << "for initial seeds\n";
 	}
 
 	// load and creates SMLs as necessary
