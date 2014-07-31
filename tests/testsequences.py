@@ -59,10 +59,17 @@ if __name__ == '__main__':
     BASE_SEQUENCE = parseFasta('baseseq.fa')[0][1]
     FASTA_BASE_STRING = '>baseseq_{}\n'
 
-    # Sequence with a single rearragement
-    swapped_seq = moveSection(BASE_SEQUENCE, 99, 199, 499)
-    with open('test_1swap.fa', 'w') as fd:
-        fd.write(FASTA_BASE_STRING.format('1swap (bases 100-200 moved to 500)'))
+    # Sequence with a single rearragement (100 bp)
+    swapped_seq = moveSection(BASE_SEQUENCE, 100, 200, 4999)
+    with open('test_1swap100.fa', 'w') as fd:
+        fd.write(FASTA_BASE_STRING.format('1swap100 (bases 100-200 moved to 5000)'))
+        fd.write(swapped_seq)
+        fd.write('\n')
+
+    # Sequence with a single rearragement (300 bp)
+    swapped_seq = moveSection(BASE_SEQUENCE, 100, 400, 4999)
+    with open('test_1swap300.fa', 'w') as fd:
+        fd.write(FASTA_BASE_STRING.format('1swap100 (bases 100-400 moved to 5000)'))
         fd.write(swapped_seq)
         fd.write('\n')
 
