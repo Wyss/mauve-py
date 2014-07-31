@@ -47,7 +47,7 @@ def addPointMutations(genome_str, start_idx=None, end_idx=None,
     end_idx = end_idx or len(genome_str)
     genome_list = list(genome_str)
     for base_idx in range(start_idx, end_idx):
-        if random.randint(0,1) < mutation_prob:
+        if random.random() < mutation_prob:
             genome_list[base_idx] = random.choice(
                 _RAND_BASE_LUT[genome_list[base_idx]])
     return ''.join(genome_list)
@@ -74,9 +74,9 @@ if __name__ == '__main__':
         fd.write('\n')
 
     # Sequence with a bunch of mutations
-    mut_seq = addPointMutations(BASE_SEQUENCE, mutation_prob=0.1)
+    mut_seq = addPointMutations(BASE_SEQUENCE, mutation_prob=0.25)
     with open('test_muts.fa', 'w') as fd:
-        fd.write(FASTA_BASE_STRING.format('muts (10% probability of mutations)'))
+        fd.write(FASTA_BASE_STRING.format('muts (2% probability of mutations)'))
         fd.write(mut_seq)
         fd.write('\n')
 
