@@ -27,7 +27,7 @@ echo "Test output files will be saved to: ${TESTDIR}"
 rm -rf $TESTDIR
 mkdir $TESTDIR
 cd $TESTDIR
-$DIR/../bin/progressiveMauveStatic --output=${TESTNAME}.xmfa ${BASESEQ} ${TESTSEQ}
+$DIR/../bin/progressiveMauveStatic --output=${TESTNAME}.xmfa ${BASESEQ} ${TESTSEQ} 
 
 # Delete all of the .sslist files
 rm ${DIR}/*.sslist
