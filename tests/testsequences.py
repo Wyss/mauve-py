@@ -87,3 +87,12 @@ if __name__ == '__main__':
         fd.write(mut_seq)
         fd.write('\n')
 
+    # Sequence with mutations and 3 dups
+    mut_dup_seq = addPointMutations(BASE_SEQUENCE, mutation_prob=0.25)
+    mut_dup_seq = duplicateSection(mut_dup_seq, 99, 499)
+    mut_dup_seq = duplicateSection(mut_dup_seq, 1199, 1399)
+    mut_dup_seq = duplicateSection(mut_dup_seq, 4549, 5699)
+    with open('test_mut_dup.fa', 'w') as fd:
+        fd.write(FASTA_BASE_STRING.format('25% mutated + 3 duplications'))
+        fd.write(mut_dup_seq)
+        fd.write('\n')
