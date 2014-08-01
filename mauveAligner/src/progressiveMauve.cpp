@@ -276,7 +276,7 @@ int doAlignment( int argc, char* argv[] ){
 	MauveOption opt_backbone_output( mauve_options, "backbone-output", required_argument, "<file> Backbone output file name (optional)." );
 	MauveOption opt_match_input( mauve_options, "match-input", required_argument, "<file> Use specified match file instead of searching for matches" );
 	MauveOption opt_input_id_matrix( mauve_options, "input-id-matrix", required_argument, "<file> An identity matrix describing similarity among all pairs of input sequences/alignments" );
-	MauveOption opt_max_gapped_aligner_length( mauve_options, "max-gapped-aligner-length", required_argument, "<number> Maximum number of base pairs to attempt aligning with the gapped aligner" );
+	MauveOption opt_max_gapped_aligner_length( mauve_options, "max-gapped-aligner-lengthmax-gapped-aligner-length", required_argument, "<number> Maximum number of base pairs to attempt aligning with the gapped aligner" );
 	MauveOption opt_input_guide_tree( mauve_options, "input-guide-tree", required_argument, "<file> A phylogenetic guide tree in NEWICK format that describes the order in which sequences will be aligned" );
 	MauveOption opt_output_guide_tree( mauve_options, "output-guide-tree", required_argument, "<file> Write out the guide tree used for alignment to a file" );
 	MauveOption opt_version( mauve_options, "version", no_argument, "Display software version information" );
@@ -284,7 +284,7 @@ int doAlignment( int argc, char* argv[] ){
 	MauveOption opt_scratch_path_1( mauve_options, "scratch-path-1", required_argument, "<path> Designate a path that can be used for temporary data storage.  Two or more paths should be specified." );
 	MauveOption opt_scratch_path_2( mauve_options, "scratch-path-2", required_argument, "<path> Designate a path that can be used for temporary data storage.  Two or more paths should be specified." );
 	MauveOption opt_collinear( mauve_options, "collinear", no_argument, "Assume that input sequences are collinear--they have no rearrangements" );
-	MauveOption opt_scoring_scheme( mauve_options, "scoring-scheme", required_argument, "<ancestral|sp_ancestral|sp> Selects the anchoring score function.  Default is extant sum-of-pairs (sp)." );
+	MauveOption opt_scoring_scheme( mauve_options, "scoring-scheme", required_argument, "<ancestral|ancestral_sp|sp> Selects the anchoring score function.  Default is extant sum-of-pairs (sp)." );
 	MauveOption opt_no_weight_scaling( mauve_options, "no-weight-scaling", no_argument, "Don't scale LCB weights by conservation distance and breakpoint distance" );
 	MauveOption opt_max_breakpoint_distance_scale( mauve_options, "max-breakpoint-distance-scale", required_argument, "<number [0,1]> Set the maximum weight scaling by breakpoint distance.  Defaults to 0.5" );
 	MauveOption opt_conservation_distance_scale( mauve_options, "conservation-distance-scale", required_argument, "<number [0,1]> Scale conservation distances by this amount.  Defaults to 0.5" );
