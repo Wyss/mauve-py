@@ -155,14 +155,22 @@ def _idxLookup(idx):
     lut_idx = index_lut[idx]
     return genome2[lut_idx] if lut_idx != -1 else '-'
 
+def _findEdge(idx):
+    if idx > 0 and idx < index_lut.shape[0]:
+        if index_lut[idx] != index_lut[idx-1] + 1:
+            return '|'
+    return ' '
+
 diff_func = lambda (g1, g2): ' ' if g1 == g2 else '*'
 
 for i in range(len(genome1) / 70):
     genome_1_line = ''.join([genome1[i * 70 + y] for y in range(70)])
     genome_2_line = ''.join([_idxLookup([i * 70 + y]) for y in range(70)])
     diff_line = ''.join(map(diff_func, zip(genome_1_line, genome_2_line)))
+    edge_line = ''.join(map(_findEdge, [i * 70 + y for y in range(70)]))
     print(i * 70)
     print(genome_1_line)
     print(genome_2_line)
     print(diff_line)
+    print(edge_line)
     print()
