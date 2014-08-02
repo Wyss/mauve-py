@@ -100,29 +100,56 @@ def buildIndex(genome_fa, ref_genome_fa):
     return idx_lut_arr
 
 
-def cleanIndex(idx_arr):
+def cleanIndex(idx_arr, genome, ref_genome, cleaning_radius=4):
     ''' Remove scars in the index mapping that result from mismatches
     and / or border regions surrounding inserts / duplications.
+
     '''
     for idx, mapped_idx in enumerate(idx_arr):
         if mapped_idx == -1: 
-            l_area = idx_arr[idx-4:idx+5]  # 9 el arr centered on idx
-            if l_area.shape[0] == 9:
-                # Large area smoothing
-                if l_area[8] - l_area[0] == 8:
-                    for i in range(9):
-                        l_area[i] = l_area[0] + i
-                # Local area smoothing
-                elif l_area[5] - l_area[3] == 2:
-                    l_area[4] = l_area[3] + 1
+            lower_idx = idx - 1
+            while lower_idx > 0 and ((idx - lower_idx) < cleaning_radius):
+                if idx_arr[lower_idx] == -1:
+                    lower_idx -= 1
+                    continue
+                for upper_idx in range(idx, idx + cleaning_radius + 1):
+                    if upper_idx > idx_arr.shape[0]:
+                        break
+                    if idx_arr[upper_idx] == -1:
+                        continue
+                    idx_range = upper_idx - lower_idx
+                    if (idx_arr[upper_idx] - idx_arr[lower_idx] == 
+                            (idx_range)):
+                        idx_arr[idx] = idx_arr[lower_idx] + (idx - lower_idx)
+                        break
+                    # Handle "edge" cases
+                    lower_bound_edge_idx = idx_arr[lower_idx] + (idx-lower_idx)
+                    if (ref_genome[lower_bound_edge_idx] == genome[idx]):
+                        idx_arr[idx] = lower_bound_edge_idx
+                        break
+                    upper_bound_edge_idx = idx_arr[upper_idx] + (upper_idx-idx)
+                    if (ref_genome[upper_bound_edge_idx] == genome[idx]):
+                        idx_arr[idx] = upper_bound_edge_idx
+                        break
+                lower_idx -= 1
+
+            # l_area = idx_arr[idx-4:idx+5]  # 9 el arr centered on idx
+            # if l_area.shape[0] == 9:
+            #     # Large area smoothing
+            #     if l_area[8] - l_area[0] == 8:
+            #         for i in range(9):
+            #             l_area[i] = l_area[0] + i
+            #     # Local area smoothing
+            #     elif l_area[5] - l_area[3] == 2:
+            #         l_area[4] = l_area[3] + 1
 
 
 index_lut = buildIndex('test_mut_dup.fa', 'baseseq.fa')
 
-cleanIndex(index_lut)
-
 genome1 = parseFasta('test_mut_dup.fa')[0][1]
 genome2 = parseFasta('baseseq.fa')[0][1]
+
+cleanIndex(index_lut, genome1, genome2)
 
 def _idxLookup(idx):
     lut_idx = index_lut[idx]
