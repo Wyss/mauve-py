@@ -99,8 +99,27 @@ def buildIndex(genome_fa, ref_genome_fa):
 
     return idx_lut_arr
 
-    
+
+def cleanIndex(idx_arr):
+    ''' Remove scars in the index mapping that result from mismatches
+    and / or border regions surrounding inserts / duplications.
+    '''
+    for idx, mapped_idx in enumerate(idx_arr):
+        if mapped_idx == -1: 
+            l_area = idx_arr[idx-4:idx+5]  # 9 el arr centered on idx
+            if l_area.shape[0] == 9:
+                # Large area smoothing
+                if l_area[8] - l_area[0] == 8:
+                    for i in range(9):
+                        l_area[i] = l_area[0] + i
+                # Local area smoothing
+                elif l_area[5] - l_area[3] == 2:
+                    l_area[4] = l_area[3] + 1
+
+
 index_lut = buildIndex('test_mut_dup.fa', 'baseseq.fa')
+
+cleanIndex(index_lut)
 
 genome1 = parseFasta('test_mut_dup.fa')[0][1]
 genome2 = parseFasta('baseseq.fa')[0][1]
