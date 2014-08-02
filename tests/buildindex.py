@@ -9,6 +9,7 @@ from functools import partial
 import numpy as np
 
 from util import parseFasta
+from xmfa import parseXMFA
 
 
 DIR = os.path.dirname(os.path.realpath(__file__))
@@ -59,25 +60,48 @@ def _processBackboneFile(backbone_fp):
     # Convert values to integers and convert to 0-based indexing
     return map(partial(map, lambda x: int(x) - 1), raw_backbone_data)
 
+def lookupSubAlignment(seq_num, sub_alignment_group):
+    sa = None
+    try:
+        sa = filter(lambda a: a.seq_num == seq_num, sub_alignment_group.alignments)[0]
+    except IndexError:
+        pass
+    return sa
 
 def buildIndex(genome_fa, ref_genome_fa):
     # Generate absolute filepaths
     genome_fp = os.path.abspath(genome_fa)
     ref_genome_fp = os.path.abspath(ref_genome_fa)
     with TempDirs(1) as (temp_dir,):
-        output_fn = os.path.join(temp_dir, 'mauveout.data')
-        runMauve(genome_fp, ref_genome_fp, flags={'--output': output_fn})
-        backbone_data = _processBackboneFile(output_fn + '.backbone')
+        output_fp = os.path.join(temp_dir, 'mauveout.xmfa')
+        runMauve(genome_fp, ref_genome_fp, flags={'--output': output_fp})
+        sub_alignment_groups = parseXMFA(output_fp)
     genome_length = getGenomeLength(genome_fp)
     # LUT to map indices from the engineered genome to the reference genome
     idx_lut_arr = np.empty(genome_length, dtype=int)
     # Initialize all values to -1 (un-mapped indices will be -1)
     idx_lut_arr[:] = -1
-    for (g1_start_idx, g1_end_idx, g2_start_idx, g2_end_idx) in backbone_data:
-        mapping = zip(range(g1_start_idx, g1_end_idx), 
-                      range(g2_start_idx, g2_end_idx))
-        for idx1, idx2 in mapping:
-            idx_lut_arr[idx1] = idx2
+    for sub_alignment_group in sub_alignment_groups:
+        genome_sa = lookupSubAlignment(1, sub_alignment_group)
+        ref_genome_sa = lookupSubAlignment(2, sub_alignment_group)
+        if genome_sa is not None and ref_genome_sa is not None:
+            # Note that we have to convert to 0-based indexing
+            genome_idx = genome_sa.start_idx - 1
+            ref_genome_idx = ref_genome_sa.start_idx - 1 
+            print(genome_idx, ref_genome_idx)
+            for idx, base in enumerate(genome_sa.seq):
+                ref_genome_base = ref_genome_sa.seq[idx]
+                if base != '-':
+                    genome_idx += 1
+                if ref_genome_base != '-':
+                    ref_genome_idx += 1
+                if base == ref_genome_base:
+                    try:
+                        idx_lut_arr[genome_idx] = ref_genome_idx
+                    except IndexError:
+                        # TODO: Figure out why we're overrunning the array...
+                        print('Array overrun: ', genome_idx, ref_genome_idx)
+
     return idx_lut_arr
 
     
@@ -101,5 +125,3 @@ for i in range(len(genome1) / 70):
     print(genome_2_line)
     print(diff_line)
     print()
-
-print(index_lut[98])
