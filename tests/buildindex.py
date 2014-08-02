@@ -88,19 +88,14 @@ def buildIndex(genome_fa, ref_genome_fa):
             # Note that we have to convert to 0-based indexing
             genome_idx = genome_sa.start_idx - 1
             ref_genome_idx = ref_genome_sa.start_idx - 1 
-            print(genome_idx, ref_genome_idx)
             for idx, base in enumerate(genome_sa.seq):
                 ref_genome_base = ref_genome_sa.seq[idx]
                 if base != '-':
                     genome_idx += 1
                 if ref_genome_base != '-':
                     ref_genome_idx += 1
-                if base == ref_genome_base:
-                    try:
-                        idx_lut_arr[genome_idx] = ref_genome_idx
-                    except IndexError:
-                        # TODO: Figure out why we're overrunning the array...
-                        print('Array overrun: ', genome_idx, ref_genome_idx)
+                if base == ref_genome_base and genome_idx < genome_length:
+                    idx_lut_arr[genome_idx] = ref_genome_idx
 
     return idx_lut_arr
 
