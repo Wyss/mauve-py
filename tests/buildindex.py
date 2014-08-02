@@ -100,9 +100,9 @@ def buildIndex(genome_fa, ref_genome_fa):
     return idx_lut_arr
 
     
-index_lut = buildIndex('test_1swap.fa', 'baseseq.fa')
+index_lut = buildIndex('test_mut_dup.fa', 'baseseq.fa')
 
-genome1 = parseFasta('test_1swap.fa')[0][1]
+genome1 = parseFasta('test_mut_dup.fa')[0][1]
 genome2 = parseFasta('baseseq.fa')[0][1]
 
 def _idxLookup(idx):
