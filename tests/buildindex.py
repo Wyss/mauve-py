@@ -144,42 +144,63 @@ def cleanIndex(idx_arr, genome, ref_genome, cleaning_radius=4):
             #     elif l_area[5] - l_area[3] == 2:
             #         l_area[4] = l_area[3] + 1
 
+if __name__ == '__main__':
 
-index_lut = buildIndex('test_mut_dup.fa', 'baseseq.fa')
+    import sys
 
-genome1 = parseFasta('test_mut_dup.fa')[0][1]
-genome2 = parseFasta('baseseq.fa')[0][1]
+    OUTPUT_TO_FN = True
 
-cleanIndex(index_lut, genome1, genome2)
+    # GENOME = 'test_mut_dup.fa'
+    # REF_GENOME = 'baseseq.fa'
+    # OUTPUT_FN = 'test_mut_dup.out'
 
-def _idxLookup(idx):
-    lut_idx = index_lut[idx]
-    return genome2[lut_idx] if lut_idx != -1 else '-'
+    GENOME = '2014_02_18_gen9_54_failed_seg_fixed_with_gc_fixes.fa'
+    REF_GENOME = 'mds42_full.fa'
+    OUTPUT_FN = '54_failed_seg_test.out'
 
-def _findEdge(idx):
-    character = ' '
-    try:
-        if index_lut[idx] == -1:
+    if OUTPUT_TO_FN:
+        print_fd = open(OUTPUT_FN, 'w')
+    else:
+        print_fd = sys.stdout
+
+    index_lut = buildIndex(GENOME, REF_GENOME)
+
+    genome1 = parseFasta(GENOME)[0][1]
+    genome2 = parseFasta(REF_GENOME)[0][1]
+
+    cleanIndex(index_lut, genome1, genome2)
+
+    def _idxLookup(idx):
+        lut_idx = index_lut[idx]
+        return genome2[lut_idx] if lut_idx != -1 else '-'
+
+    def _findEdge(idx):
+        character = ' '
+        try:
+            if index_lut[idx] == -1:
+                pass
+            elif index_lut[idx] != index_lut[idx-1] + 1:
+                character = '|'
+            elif index_lut[idx] != index_lut[idx+1] - 1:
+                character = '|'
+        except IndexError:
             pass
-        elif index_lut[idx] != index_lut[idx-1] + 1:
-            character = '|'
-        elif index_lut[idx] != index_lut[idx+1] - 1:
-            character = '|'
-    except IndexError:
-        pass
-    finally:
-        return character
+        finally:
+            return character
 
-diff_func = lambda g1, g2: ' ' if g1 == g2 else '*'
+    diff_func = lambda g1, g2: ' ' if g1 == g2 else '*'
 
-for i in range(len(genome1) // 70):
-    genome_1_line = ''.join([genome1[i * 70 + y] for y in range(70)])
-    genome_2_line = ''.join([_idxLookup([i * 70 + y]) for y in range(70)])
-    diff_line = ''.join(starmap(diff_func, zip(genome_1_line, genome_2_line)))
-    edge_line = ''.join(map(_findEdge, [i * 70 + y for y in range(70)]))
-    print(i * 70)
-    print(genome_1_line)
-    print(genome_2_line)
-    print(diff_line)
-    print(edge_line)
-    print()
+    for i in range(len(genome1) // 70):
+        genome_1_line = ''.join([genome1[i * 70 + y] for y in range(70)])
+        genome_2_line = ''.join([_idxLookup([i * 70 + y]) for y in range(70)])
+        diff_line = ''.join(starmap(diff_func, zip(genome_1_line, genome_2_line)))
+        edge_line = ''.join(map(_findEdge, [i * 70 + y for y in range(70)]))
+        print(i * 70,file=print_fd)
+        print(genome_1_line,file=print_fd)
+        print(genome_2_line,file=print_fd)
+        print(diff_line,file=print_fd)
+        print(edge_line,file=print_fd)
+        print(file=print_fd)
+
+    if OUTPUT_TO_FN:
+        print_fd.close()
