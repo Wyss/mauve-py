@@ -157,10 +157,18 @@ def _idxLookup(idx):
     return genome2[lut_idx] if lut_idx != -1 else '-'
 
 def _findEdge(idx):
-    if idx > 0 and idx < index_lut.shape[0]:
-        if index_lut[idx] != index_lut[idx-1] + 1:
-            return '|'
-    return ' '
+    character = ' '
+    try:
+        if index_lut[idx] == -1:
+            pass
+        elif index_lut[idx] != index_lut[idx-1] + 1:
+            character = '|'
+        elif index_lut[idx] != index_lut[idx+1] - 1:
+            character = '|'
+    except IndexError:
+        pass
+    finally:
+        return character
 
 diff_func = lambda g1, g2: ' ' if g1 == g2 else '*'
 
