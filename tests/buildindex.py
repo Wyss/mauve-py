@@ -7,6 +7,7 @@ import shutil
 
 from functools import partial 
 import numpy as np
+from itertools import starmap 
 
 from util import parseFasta
 from xmfa import parseXMFA
@@ -63,7 +64,7 @@ def _processBackboneFile(backbone_fp):
 def lookupSubAlignment(seq_num, sub_alignment_group):
     sa = None
     try:
-        sa = filter(lambda a: a.seq_num == seq_num, sub_alignment_group.alignments)[0]
+        sa = list(filter(lambda a: a.seq_num == seq_num, sub_alignment_group.alignments))[0]
     except IndexError:
         pass
     return sa
@@ -161,12 +162,12 @@ def _findEdge(idx):
             return '|'
     return ' '
 
-diff_func = lambda (g1, g2): ' ' if g1 == g2 else '*'
+diff_func = lambda g1, g2: ' ' if g1 == g2 else '*'
 
-for i in range(len(genome1) / 70):
+for i in range(len(genome1) // 70):
     genome_1_line = ''.join([genome1[i * 70 + y] for y in range(70)])
     genome_2_line = ''.join([_idxLookup([i * 70 + y]) for y in range(70)])
-    diff_line = ''.join(map(diff_func, zip(genome_1_line, genome_2_line)))
+    diff_line = ''.join(starmap(diff_func, zip(genome_1_line, genome_2_line)))
     edge_line = ''.join(map(_findEdge, [i * 70 + y for y in range(70)]))
     print(i * 70)
     print(genome_1_line)
