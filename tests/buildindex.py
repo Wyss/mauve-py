@@ -151,8 +151,9 @@ def findEdges(idx_arr):
 def findMismatches(idx_arr, genome, ref_genome):
     mismatch_arr = np.zeros(idx_arr.shape[0], dtype=np.uint8)
     for idx, base in enumerate(genome):
-        if base != ref_genome(idx_arr[idx]):
-            mismatch_arr[idx] = 1
+        if idx_arr[idx] != -1:
+            if base != ref_genome[idx_arr[idx]]:
+                mismatch_arr[idx] = 1
     return mismatch_arr
 # end def
 
