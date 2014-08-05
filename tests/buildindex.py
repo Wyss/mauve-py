@@ -135,6 +135,27 @@ def findGaps(idx_arr):
         raise
     return gap_arr
 
+def findEdges(idx_arr):
+    ''' Find and print edges in the idx_arr
+    return a 1 on the 5 prime most index of a segment
+    uses slicing
+    '''
+    edge_arr = np.zeros(idx_arr.shape[0], dtype=np.uint8)
+    edge_arr_view = edge_arr[1:]    # slice not a copy
+    delta_map_idxs = ind_arr[1:] - ind_arr[:-1]
+    edge_arr_view[delta_map_idxs != 1] = 1
+    edge_arr[0] = 1     # 0 index is always an edge
+    return edge_arr
+#end def
+
+def findMismatches(idx_arr, genome, ref_genome):
+    mismatch_arr = np.zeros(idx_arr.shape[0], dtype=np.uint8)
+    for idx, base in enumerate(genome):
+        if base != ref_genome(idx_arr[idx]):
+            mismatch_arr[idx] = 1
+    return mismatch_arr
+# end def
+
 
 # def cleanIndex(idx_arr, genome, ref_genome, cleaning_radius=4):
 #     ''' Remove scars in the index mapping that result from mismatches
