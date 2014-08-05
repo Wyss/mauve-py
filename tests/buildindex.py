@@ -235,9 +235,9 @@ def findEdges(idx_arr):
     return a 1 on the 5 prime most index of a segment
     uses slicing
     '''
-    edge_arr = np.zeros(idx_arr.shape[0], dtype=np.uint8)
+    edge_arr = np.zeros(idx_arr.shape[0], dtype=MASK_ARRAY_DTYPE)
     edge_arr_view = edge_arr[1:]    # slice not a copy
-    delta_map_idxs = ind_arr[1:] - ind_arr[:-1]
+    delta_map_idxs = idx_arr[1:] - idx_arr[:-1]
     edge_arr_view[delta_map_idxs != 1] = 1
     edge_arr[0] = 1     # 0 index is always an edge
     return edge_arr
@@ -245,7 +245,7 @@ def findEdges(idx_arr):
 
 
 def findMismatches(idx_arr, genome, ref_genome):
-    mismatch_arr = np.zeros(idx_arr.shape[0], dtype=np.uint8)
+    mismatch_arr = np.zeros(idx_arr.shape[0], dtype=MASK_ARRAY_DTYPE)
     for idx, base in enumerate(genome):
         if base != ref_genome(idx_arr[idx]):
             mismatch_arr[idx] = 1
