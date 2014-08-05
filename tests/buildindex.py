@@ -194,12 +194,63 @@ def buildIndex(genome_fa, ref_genome_fa, fill_gaps=True, max_gap_width=300,
                     ref_genome_idx += 1
                 if base == ref_genome_base and genome_idx < genome_length:
                     idx_lut[genome_idx] = ref_genome_idx
-
     if fill_gaps:
         fillGaps(idx_lut, max_gap_width=max_gap_width)
     if smooth_edges:
         smoothEdges(idx_lut, smoothing_width=smoothing_width)
     return idx_lut
+
+
+def findGaps(idx_arr):
+    ''' Find and print gaps in the idx_arr
+    '''
+    gap_arr = np.zeros(idx_arr.shape[0], dtype=np.int32)
+    try:
+        for idx, mapped_idx in enumerate(idx_arr[1:], start=1):
+            lower_idx = idx - 1
+            lower_mapped_idx = idx_arr[idx-1]
+            if mapped_idx == -1 and lower_mapped_idx != -1:
+                success = False
+                for upper_idx, upper_mapped_idx in enumerate(idx_arr[idx+1:],
+                                                             start=idx+1):
+                    if (upper_idx-idx > 300):
+                        break
+                    if ((upper_mapped_idx - lower_mapped_idx) ==
+                       (upper_idx - lower_idx)):
+                        gap_size = upper_idx - lower_idx
+                        idx_arr[lower_idx:upper_idx+1] = np.arange(lower_mapped_idx, upper_mapped_idx+1, dtype=int)
+                        gap_arr[idx] = gap_size
+                        success = True
+                        break
+                if not success:
+                    gap_arr[idx] = -1
+    except KeyboardInterrupt:
+        print(idx)
+        raise
+    return gap_arr
+
+
+def findEdges(idx_arr):
+    ''' Find and print edges in the idx_arr
+    return a 1 on the 5 prime most index of a segment
+    uses slicing
+    '''
+    edge_arr = np.zeros(idx_arr.shape[0], dtype=np.uint8)
+    edge_arr_view = edge_arr[1:]    # slice not a copy
+    delta_map_idxs = ind_arr[1:] - ind_arr[:-1]
+    edge_arr_view[delta_map_idxs != 1] = 1
+    edge_arr[0] = 1     # 0 index is always an edge
+    return edge_arr
+#end def
+
+
+def findMismatches(idx_arr, genome, ref_genome):
+    mismatch_arr = np.zeros(idx_arr.shape[0], dtype=np.uint8)
+    for idx, base in enumerate(genome):
+        if base != ref_genome(idx_arr[idx]):
+            mismatch_arr[idx] = 1
+    return mismatch_arr
+# end def
 
 
 def test():
