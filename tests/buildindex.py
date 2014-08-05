@@ -241,7 +241,6 @@ def findEdges(idx_lut):
     edge_arr_view[delta_map_idxs != 1] = 1
     edge_arr[0] = 1     # 0 index is always an edge
     return edge_arr
-#end def
 
 
 def findMismatches(idx_lut, genome, ref_genome):
@@ -251,7 +250,6 @@ def findMismatches(idx_lut, genome, ref_genome):
             if base != ref_genome[idx_lut[idx]]:
                 mismatch_arr[idx] = 1
     return mismatch_arr
-# end def
 
 
 def findDuplicateMappings(idx_lut):
@@ -284,17 +282,19 @@ def test():
     else:
         print_fd = sys.stdout
 
-    # idx_lut = buildIndex(GENOME, REF_GENOME)
-
-    # np.save('index_lut.temp', idx_lut)
-
-    idx_lut = np.load('index_lut.temp.npy')
+    # Cache the numpy array
+    try:
+        idx_lut = np.load('index_lut.npy')
+    except IOError:
+        idx_lut = buildIndex(GENOME, REF_GENOME, fill_gaps=False, 
+                             smooth_edges=False)
+        np.save('index_lut.temp', idx_lut)
 
     genome1 = parseFasta(GENOME)[0][1]
     genome2 = parseFasta(REF_GENOME)[0][1]
 
-    print('pre-cleaning duplicates:', findDuplicateMappings(idx_lut))
     # Test cleaning
+    print('pre-cleaning duplicates:', findDuplicateMappings(idx_lut))
     fillGaps(idx_lut)
     smoothEdges(idx_lut)
     print('post-cleaning duplicates:', findDuplicateMappings(idx_lut))
@@ -318,7 +318,6 @@ def test():
         finally:
             return character
 
-
     diff_func = lambda g1, g2: ' ' if g1 == g2 else '*'
 
     for i in range(len(genome1) // 70):
@@ -335,9 +334,6 @@ def test():
 
     if OUTPUT_TO_FN:
         print_fd.close()
-
-    for idx in range(1969730, 1969800):
-        print(idx, idx_lut[idx])
 
 
 if __name__ == '__main__':
