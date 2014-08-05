@@ -201,24 +201,24 @@ def buildIndex(genome_fa, ref_genome_fa, fill_gaps=True, max_gap_width=300,
     return idx_lut
 
 
-def findGaps(idx_arr):
-    ''' Find and print gaps in the idx_arr
+def findGaps(idx_lut):
+    ''' Find and print gaps in the idx_lut
     '''
-    gap_arr = np.zeros(idx_arr.shape[0], dtype=np.int32)
+    gap_arr = np.zeros(idx_lut.shape[0], dtype=np.int32)
     try:
-        for idx, mapped_idx in enumerate(idx_arr[1:], start=1):
+        for idx, mapped_idx in enumerate(idx_lut[1:], start=1):
             lower_idx = idx - 1
-            lower_mapped_idx = idx_arr[idx-1]
+            lower_mapped_idx = idx_lut[idx-1]
             if mapped_idx == -1 and lower_mapped_idx != -1:
                 success = False
-                for upper_idx, upper_mapped_idx in enumerate(idx_arr[idx+1:],
+                for upper_idx, upper_mapped_idx in enumerate(idx_lut[idx+1:],
                                                              start=idx+1):
                     if (upper_idx-idx > 300):
                         break
                     if ((upper_mapped_idx - lower_mapped_idx) ==
                        (upper_idx - lower_idx)):
                         gap_size = upper_idx - lower_idx
-                        idx_arr[lower_idx:upper_idx+1] = np.arange(lower_mapped_idx, upper_mapped_idx+1, dtype=int)
+                        idx_lut[lower_idx:upper_idx+1] = np.arange(lower_mapped_idx, upper_mapped_idx+1, dtype=int)
                         gap_arr[idx] = gap_size
                         success = True
                         break
@@ -230,28 +230,39 @@ def findGaps(idx_arr):
     return gap_arr
 
 
-def findEdges(idx_arr):
-    ''' Find and print edges in the idx_arr
+def findEdges(idx_lut):
+    ''' Find and print edges in the idx_lut
     return a 1 on the 5 prime most index of a segment
     uses slicing
     '''
-    edge_arr = np.zeros(idx_arr.shape[0], dtype=MASK_ARRAY_DTYPE)
+    edge_arr = np.zeros(idx_lut.shape[0], dtype=MASK_ARRAY_DTYPE)
     edge_arr_view = edge_arr[1:]    # slice not a copy
-    delta_map_idxs = idx_arr[1:] - idx_arr[:-1]
+    delta_map_idxs = idx_lut[1:] - idx_lut[:-1]
     edge_arr_view[delta_map_idxs != 1] = 1
     edge_arr[0] = 1     # 0 index is always an edge
     return edge_arr
 #end def
 
 
-def findMismatches(idx_arr, genome, ref_genome):
-    mismatch_arr = np.zeros(idx_arr.shape[0], dtype=MASK_ARRAY_DTYPE)
+def findMismatches(idx_lut, genome, ref_genome):
+    mismatch_arr = np.zeros(idx_lut.shape[0], dtype=MASK_ARRAY_DTYPE)
     for idx, base in enumerate(genome):
-        if idx_arr[idx] != -1:
-            if base != ref_genome[idx_arr[idx]]:
+        if idx_lut[idx] != -1:
+            if base != ref_genome[idx_lut[idx]]:
                 mismatch_arr[idx] = 1
     return mismatch_arr
 # end def
+
+
+def findDuplicateMappings(idx_lut):
+    ''' Find duplicate mappings in the idx_lut. If everything is working
+    properly there should be 1:1, unambiguous mappings.
+    '''
+    arr_cpy = np.copy(idx_lut)
+    arr_cpy = np.clip(arr_cpy, 0, 4294967295)
+    mapped_idx_counts = np.bincount(arr_cpy)
+    num_duplicate_mappings = sum(mapped_idx_counts > 1)
+    return num_duplicate_mappings
 
 
 def test():
@@ -265,7 +276,7 @@ def test():
 
     GENOME = os.path.join(DIR, '2014_02_18_gen9_54_failed_seg_fixed_with_gc_fixes.fa')
     REF_GENOME = os.path.join(DIR, 'mds42_full.fa')
-    OUTPUT_FN = os.path.join(DIR, '54_failed_seg_test-testcleanup-nosmoothing.out')
+    OUTPUT_FN = os.path.join(DIR, '54_failed_seg_test-testcleanup.out')
 
     if OUTPUT_TO_FN:
         print_fd = open(OUTPUT_FN, 'w')
@@ -281,9 +292,11 @@ def test():
     genome1 = parseFasta(GENOME)[0][1]
     genome2 = parseFasta(REF_GENOME)[0][1]
 
+    print('pre-cleaning duplicates:', findDuplicateMappings(idx_lut))
     # Test cleaning
     fillGaps(idx_lut)
-    # smoothEdges(idx_lut)
+    smoothEdges(idx_lut)
+    print('post-cleaning duplicates:', findDuplicateMappings(idx_lut))
 
 
     def _idxLookup(idx):
