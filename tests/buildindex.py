@@ -261,7 +261,8 @@ def findDuplicateMappings(idx_lut):
     arr_cpy = np.copy(idx_lut)
     arr_cpy = np.clip(arr_cpy, 0, 4294967295)
     mapped_idx_counts = np.bincount(arr_cpy)
-    num_duplicate_mappings = sum(mapped_idx_counts > 1)
+    # -1 as 0 will show up here as we are clipping unmapped basses to 0
+    num_duplicate_mappings = sum(mapped_idx_counts > 1) - 1
     return num_duplicate_mappings
 
 
