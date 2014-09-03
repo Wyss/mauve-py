@@ -3,7 +3,9 @@ The Mauve License is GPLv2.
 
 Please cite for progressive mauve:
 
-    Aaron E. Darling, Bob Mau, and Nicole T. Perna. 2010.  progressiveMauve: Multiple Genome Alignment with Gene Gain, Loss, and Rearrangement.  PLoS One.  5(6):e11147. 
+    Aaron E. Darling, Bob Mau, and Nicole T. Perna. 2010.  
+    progressiveMauve: Multiple Genome Alignment with Gene Gain, Loss, 
+    and Rearrangement.  PLoS One.  5(6):e11147. 
 
 All dependencies are grouped in this repo which include [muscle](http://www.drive5.com/muscle/).
 Muscle is licensed to the [Public Domain](http://www.drive5.com/muscle/manual/license.html)
