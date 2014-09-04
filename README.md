@@ -1,16 +1,16 @@
 See [mauveAligner](http://asap.ahabs.wisc.edu/software/mauve/overview.html) for original source. 
 The Mauve License is GPLv2.  
 
-Please cite for progressive mauve:
+Please cite progressive mauve:
 
     Aaron E. Darling, Bob Mau, and Nicole T. Perna. 2010.  
     progressiveMauve: Multiple Genome Alignment with Gene Gain, Loss, 
     and Rearrangement.  PLoS One.  5(6):e11147. 
 
-All dependencies are grouped in this repo which include [muscle](http://www.drive5.com/muscle/).
-Muscle is licensed to the [Public Domain](http://www.drive5.com/muscle/manual/license.html)
+All dependencies are grouped in this repo which include [MUSCLE](http://www.drive5.com/muscle/).
+MUSCLE is licensed in the [Public Domain](http://www.drive5.com/muscle/manual/license.html)
 
-For Muscle cite:
+For MUSCLE cite:
 
     Edgar, R.C. (2004) MUSCLE: multiple sequence alignment with high accuracy 
     and high throughput Nucleic Acids Res. 32(5):1792-1797
@@ -21,13 +21,13 @@ Biologically Inspired Engineering
 
 # Deviations from stock mauve
     
-updated to latest boost 1.55ish so we now run BOOST_FILESYSTEM_VERSION 3 instead of 2
-
-os x is clang compatible now. follow instructions below  
+- updated to latest boost 1.55ish so we now run BOOST_FILESYSTEM_VERSION 3 instead of 2
+- os x is clang compatible now. follow instructions below.  
+- lots of compiler warning fixes thanks to building on both clang and gcc
 
 # dependencies
 
-Get these for your platform (Linux or OS X)
+Get these for your platform (Linux or OS X, Windows is unsupported)
     
     automake
     libtool
@@ -66,7 +66,8 @@ see:
 # Python installation
 
 Included are Python wrappers for handling mauve aligner output and fixing errors
-associated with missing alignements in module buildindex which depends on 
+associated with gaps alignments where an actual alignment could be found.
+Module buildindex does this which depends on:
 
 - numpy
 - bitarray
