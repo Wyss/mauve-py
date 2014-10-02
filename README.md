@@ -85,4 +85,4 @@ to build inplace or install them with:
 
 
 **Additionally** please remember to set the `MAUVE_DIR` environment 
-variable to point to where you choose to.
+variable to point to where you placed this repository.
