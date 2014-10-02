@@ -36,8 +36,8 @@ Get these for your platform (Linux or OS X, Windows is unsupported)
 
 # INSTALLATION preliminary
 
-set the MAUVE_DIR environment variable to path to this repository on the 
-installation machine
+set the `MAUVE_DIR` environment variable to path to this repository on the 
+installation machine.   The build scripts by default make the build install inplace.
 
 # LINUX INSTALLATION (Debian)
 
@@ -69,9 +69,11 @@ Included are Python wrappers for handling mauve aligner output and fixing errors
 associated with gaps alignments where an actual alignment could be found.
 Module buildindex does this which depends on:
 
-- numpy
-- bitarray
-- cython 
+- [numpy](https://pypi.python.org/pypi/numpy/1.9.0)
+- [bitarray](https://pypi.python.org/pypi/bitarray/0.8.1)
+- [cython](https://pypi.python.org/pypi/Cython/0.21)
+
+which can all be installed with `pip`
 
 run:
 
@@ -80,3 +82,7 @@ run:
 to build inplace or install them with:
 
     python setup.py install
+
+
+**Additionally** please remember to set the `MAUVE_DIR` environment 
+variable to point to where you choose to.
