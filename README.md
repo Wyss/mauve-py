@@ -47,10 +47,10 @@ genome B.
 
 Get these for your platform (Linux or OS X, Windows is unsupported)
     
-    - [automake](https://www.gnu.org/software/automake/)
-    - [libtool](https://www.gnu.org/software/libtool/)
-    - [pkg-config](http://www.freedesktop.org/wiki/Software/pkg-config/)
-    - [boost](http://www.boost.org/) > 1.55
+- [automake](https://www.gnu.org/software/automake/)
+- [libtool](https://www.gnu.org/software/libtool/)
+- [pkg-config](http://www.freedesktop.org/wiki/Software/pkg-config/)
+- [boost](http://www.boost.org/) > 1.55
 
 Which can easily be installed with the package manager for your OS, 
 apt, yum, etc on Linux, or [Homebrew](http://brew.sh/) for OS X
