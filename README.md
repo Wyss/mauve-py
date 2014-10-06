@@ -1,3 +1,10 @@
+# mauve-py
+Python wrappers for progressive mauve genome aligner
+
+mauve-py is particularly suited to mapping modified synthetic genomes back
+to a reference genome and includes features to aid in the "healing" of the
+mapping that the progressive mauve binaries miss
+
 See [mauveAligner](http://asap.ahabs.wisc.edu/software/mauve/overview.html) for original source. 
 The Mauve License is GPLv2.  
 
@@ -16,58 +23,39 @@ For MUSCLE cite:
     and high throughput Nucleic Acids Res. 32(5):1792-1797
 
 The included Python wrappers and file parsers are GPLv2 Licensed
-Copyright (c) 2014 Ben Pruitt, Nick Conway; Wyss Institute for 
+Copyright (c) 2014  Nick Conway, Ben Pruitt; Wyss Institute for 
 Biologically Inspired Engineering
 
-# Deviations from stock mauve
-    
-- updated to latest boost 1.55ish so we now run BOOST_FILESYSTEM_VERSION 3 instead of 2
-- os x is clang compatible now. follow instructions below.  
-- lots of compiler warning fixes thanks to building on both clang and gcc
 
-# dependencies
+## Usage
+Right now we support comparing only two genomes at a time, although mauve will
+handle more.
+
+Use fasta files on the input:
+
+```python
+import mauve
+index_lookup_table = mauve.buildIndex("my_genome_A.fa", "reference_genome_B.fa")
+```
+
+the `index_lut` is a lookup table mapping a moddified genome A to a reference 
+genome B. 
+
+## Dependencies
+
+### Binary dependencies
 
 Get these for your platform (Linux or OS X, Windows is unsupported)
     
-    automake
-    libtool
-    pkg-config
-    boost > 1.55ish
+    - [automake](https://www.gnu.org/software/automake/)
+    - [libtool](https://www.gnu.org/software/libtool/)
+    - [pkg-config](http://www.freedesktop.org/wiki/Software/pkg-config/)
+    - [boost](http://www.boost.org/) > 1.55
 
-# INSTALLATION preliminary
+Which can easily be installed with the package manager for your OS, 
+apt, yum, etc on Linux, or [Homebrew](http://brew.sh/) for OS X
 
-set the `MAUVE_DIR` environment variable to path to this repository on the 
-installation machine.   The build scripts by default make the build install inplace.
-
-# LINUX INSTALLATION (Debian)
-
-boost requirements for debian linux
-
-    libboost-filesystem-dev, libboost-program-options-dev, libboost-iostreams-dev
-
-run
-
-    ./build_linux.sh
-
-# OS X INSTALLATION (Mavericks tested)
-make sure you have Homebrew installed on OS X Mavericks
-
-    brew install boost --c++11
-
-run  
-
-    ./build_osx.sh
-
-see:
-
--   [clang boost ref 1](http://hnrkptrsn.github.io/2013/02/26/c11-and-boost-setup-guide/)
--   [clang boost ref 2](http://stackoverflow.com/questions/17884344/why-does-boost-compilation-fails-with-clang)
-
-# Python installation
-
-Included are Python wrappers for handling mauve aligner output and fixing errors
-associated with gaps alignments where an actual alignment could be found.
-Module buildindex does this which depends on:
+### Python dependencies
 
 - [numpy](https://pypi.python.org/pypi/numpy/1.9.0)
 - [bitarray](https://pypi.python.org/pypi/bitarray/0.8.1)
@@ -75,14 +63,41 @@ Module buildindex does this which depends on:
 
 which can all be installed with `pip`
 
+## LINUX INSTALLATION (Debian)
+Double check you have the right `boost` components installed
+
+`boost` requirements for debian linux
+
+    libboost-filesystem-dev, libboost-program-options-dev, libboost-iostreams-dev
+
 run:
-
-    python setup.py build_ext --inplace
-
-to build inplace or install them with:
 
     python setup.py install
 
+## OS X INSTALLATION (Mavericks tested)
+Double check you have the right boost components installed
 
-**Additionally** please remember to set the `MAUVE_DIR` environment 
-variable to point to where you placed this repository.
+make sure you have `Homebrew` installed on OS X Mavericks
+
+    brew install boost --c++11
+
+run: 
+
+    python setup.py install
+
+see:
+
+-   [clang boost ref 1](http://hnrkptrsn.github.io/2013/02/26/c11-and-boost-setup-guide/)
+-   [clang boost ref 2](http://stackoverflow.com/questions/17884344/why-does-boost-compilation-fails-with-clang)
+
+# Building Mauve stand-alone
+
+If you'd like to use mauve without the python wrapper, look in the `mauve\src`
+path for the fork of the source.  It is updated to build on recent gcc and clang
+with c++11, mainly out of the need to get rid of build errors and warnings.
+
+## Deviations from stock mauve
+    
+- updated to latest boost 1.55ish so we now run BOOST_FILESYSTEM_VERSION 3 instead of 2
+- os x is clang compatible now. follow instructions below.  
+- lots of compiler warning fixes thanks to building on both clang and gcc

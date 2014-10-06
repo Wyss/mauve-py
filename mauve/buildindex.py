@@ -16,13 +16,13 @@ PROG_MAUVE_STATIC_FP = os.path.join(MAUVE_DIR, 'progressiveMauveStatic')
 
 if not (os.path.isfile(PROG_MAUVE_STATIC_FP) and
         os.access(PROG_MAUVE_STATIC_FP, os.X_OK)):
-    raise IOError('Cacheould not find progressiveMauveStatic in {}. Environmental '
+    raise IOError('Cache could not find progressiveMauveStatic in {}. Environmental '
                   'variable `MAUVE_DIR` is defined as: {}.'.format(
                    MAUVE_DIR, os.environ.get('MAUVE_DIR')))
 
-from buildindex.util import parseFasta
-from buildindex.xmfa import parseXMFA
-import buildindex.indexutils as indexutils
+from .util import parseFasta
+from .xmfa import parseXMFA
+import mauve.indexutils as indexutils
 
 def getSeqFromFile(seq_fp):
     _, ext = os.path.splitext(seq_fp)

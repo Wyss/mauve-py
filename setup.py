@@ -38,17 +38,26 @@ from distutils.command import install_lib
 from os.path import join as pjoin
 from os.path import relpath as rpath
 
+dlog.set_verbosity(dlog.INFO)
+
 try:
     from Cython.Build import cythonize
 except:
-  dlog.error("Please install cython")
+  print("Please install cython")
   raise
 
 try:
     import numpy.distutils.misc_util
 except:
-    dlog.error("Please install numpy")
+    print("Please install numpy")
     raise
+
+try:
+    import bitarray
+except:
+    print("Please install bitarray")
+    raise
+
 
 # list of all executable built by the mauve source
 mauve_executables = ["addUnalignedIntervals", "makeBadgerMatrix",
@@ -70,7 +79,7 @@ mauve_executables = ["addUnalignedIntervals", "makeBadgerMatrix",
 ]
 
 
-# to install executable files
+# to install executable files in package_data
 class ExeInstallLib(install_lib.install_lib):
     def run(self):
         install_lib.install_lib.run(self)
@@ -103,11 +112,11 @@ elif os_system == 'Linux':      # update this for BSD, other POSIX etc
 else:
     raise OSError("Platform %s not supported" % (os_system))
 
-dlog.info("Building mauve dependencies...")
+print("Building mauve dependencies...")
 mauve_make = pjoin(SRC_PATH, mauve_make)
 mauvebuild = subprocess.Popen([mauve_make], shell=True, cwd=SRC_PATH)
 mauvebuild.wait()
-dlog.info("Finished building mauve dependencies")
+print("Finished building mauve dependencies")
 
 # Find all mauve data files to include with the package
 mauve_files = [rpath(pjoin(root, f), MODULE_PATH) for root, _, files in
