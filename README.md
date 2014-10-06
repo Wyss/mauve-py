@@ -1,11 +1,11 @@
 # mauve-py
-Python wrappers for progressive mauve genome aligner
+Python wrappers for a fork of progressiveMauve multiple genome aligner
 
 mauve-py is particularly suited to mapping modified synthetic genomes back
 to a reference genome and includes features to aid in the "healing" of the
 mapping that the progressive mauve binaries miss
 
-See [mauveAligner](http://asap.ahabs.wisc.edu/software/mauve/overview.html) for original source. 
+See [mauve alignment](http://asap.ahabs.wisc.edu/software/mauve/overview.html) for original source. 
 The Mauve License is GPLv2.  
 
 Please cite progressive mauve:
