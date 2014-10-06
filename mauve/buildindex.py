@@ -11,8 +11,14 @@ import bitarray
 import numpy as np
 from itertools import starmap
 
-LOCAL_DIR = os.path.dirname(os.path.realpath(__file__))
-sys.path.append(os.path.abspath(os.path.join(LOCAL_DIR, '..')))
+MAUVE_DIR = os.environ.get('MAUVE_DIR')
+PROG_MAUVE_STATIC_FP = os.path.join(MAUVE_DIR, 'progressiveMauveStatic')
+
+if not (os.path.isfile(PROG_MAUVE_STATIC_FP) and
+        os.access(PROG_MAUVE_STATIC_FP, os.X_OK)):
+    raise IOError('Cacheould not find progressiveMauveStatic in {}. Environmental '
+                  'variable `MAUVE_DIR` is defined as: {}.'.format(
+                   MAUVE_DIR, os.environ.get('MAUVE_DIR')))
 
 from buildindex.util import parseFasta
 from buildindex.xmfa import parseXMFA
@@ -26,22 +32,6 @@ def getSeqFromFile(seq_fp):
         return fasta.parseFasta(seq_fp)[0][1]
     else:
         raise IOError("unknown format")
-
-MAUVE_DIR = os.environ.get('MAUVE_DIR')
-
-LOCAL_DIR = os.path.dirname(os.path.realpath(__file__))
-
-MAUVE_DIR = (os.environ.get('MAUVE_DIR') or
-            os.path.join(os.path.dirname(LOCAL_DIR), 'bin'))
-
-PROG_MAUVE_STATIC_FP = os.path.join(MAUVE_DIR, 'progressiveMauveStatic')
-
-if not (os.path.isfile(PROG_MAUVE_STATIC_FP) and
-        os.access(PROG_MAUVE_STATIC_FP, os.X_OK)):
-    raise IOError('Could not find progressiveMauveStatic in {}. Environmental '
-                  'variable `MAUVE_DIR` is defined as: {}.'.format(
-                   MAUVE_DIR, os.environ.get('MAUVE_DIR')))
-
 
 # Non-mask array data type
 # 32-bit supports genomes up to 4 billion bases in length
