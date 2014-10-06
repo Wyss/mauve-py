@@ -38,8 +38,8 @@ import mauve
 index_lookup_table = mauve.buildIndex("my_genome_A.fa", "reference_genome_B.fa")
 ```
 
-the `index_lut` is a lookup table mapping a moddified genome A to a reference 
-genome B. 
+the `index_lut` is a lookup table mapping a modified genome A index to a reference 
+genome B index from the 5' end starting at 0.
 
 ## Dependencies
 
