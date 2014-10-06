@@ -5,10 +5,10 @@
  mauve-py: 
 ===========================================================
 
-``mauve-py`` is a collection of Python bindings for a derivative of the
+``mauve-py`` is a Python wrappers for a derivative of the
 popular mauve genome aligner.
 
-See README.rst for more information and primer3_test.py for usage examples.
+See README.md for more information for usage examples.
 
 Installation
 ------------
@@ -65,7 +65,7 @@ mauve_executables = ["addUnalignedIntervals", "makeBadgerMatrix",
 "scoreAlignment", "stripGapColumns",
 "stripSubsetLCBs", "toGrimmFormat",
 "toMultiFastA", "toRawSequence",
-"uniqueMerCount", "uniquifyTrees"
+"uniqueMerCount", "uniquifyTrees",
 "xmfa2maf"
 ]
 
@@ -138,7 +138,8 @@ CLASSIFIERS = [
     'Topic :: Scientific/Engineering',
 ]
 
-mauve_extensions = [Extension('mauve.indexutils', sources=['mauve/indexutils.pyx'])]
+mauve_extensions = [Extension('mauve.indexutils', 
+                                sources=['mauve/indexutils.pyx'])]
 mauve_ext_list = cythonize(mauve_extensions)
 
 setup(
