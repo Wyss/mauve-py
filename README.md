@@ -92,12 +92,13 @@ see:
 
 # Building Mauve stand-alone
 
-If you'd like to use mauve without the python wrapper, look in the `mauve\src`
+If you'd like to use mauve without the python wrapper, look in the `mauve/src`
 path for the fork of the source.  It is updated to build on recent gcc and clang
 with c++11, mainly out of the need to get rid of build errors and warnings.
 
 ## Deviations from stock mauve
     
 - updated to latest boost 1.55ish so we now run BOOST_FILESYSTEM_VERSION 3 instead of 2
-- os x is clang compatible now. follow instructions below.  
+- OS X is clang compatible now. follow instructions below.
+- no Windows support although it might be easy to add back in  
 - lots of compiler warning fixes thanks to building on both clang and gcc

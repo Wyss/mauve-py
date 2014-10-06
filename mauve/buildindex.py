@@ -20,7 +20,7 @@ if not (os.path.isfile(PROG_MAUVE_STATIC_FP) and
                   'variable `MAUVE_DIR` is defined as: {}.'.format(
                    MAUVE_DIR, os.environ.get('MAUVE_DIR')))
 
-from .util import parseFasta
+from .fasta import parseFasta
 from .xmfa import parseXMFA
 import mauve.indexutils as indexutils
 
@@ -29,7 +29,7 @@ def getSeqFromFile(seq_fp):
     if ext in ('.fa', '.fasta'):
         # Just returns the first sequence in the file for now --
         # this may be undesirable as a general behavior
-        return fasta.parseFasta(seq_fp)[0][1]
+        return parseFasta(seq_fp)[0][1]
     else:
         raise IOError("unknown format")
 
@@ -136,7 +136,7 @@ def buildIndex(genome_fp, ref_genome_fp, genome_seq=None, ref_genome_seq=None,
                     idx_lut[genome_idx] = ref_genome_idx
     if fill_gaps:
         genome_seq = genome_seq or getSeqFromFile(genome_fp)
-        ref_genome_seq = ref_genome_seq or getSeqFromFile(ref_genome_seq)
+        ref_genome_seq = ref_genome_seq or getSeqFromFile(ref_genome_fp)
         indexutils.fixZeroIdx(idx_lut, genome_seq, ref_genome_seq)
         indexutils.fillGaps(idx_lut, max_gap_width=max_gap_width)
     if smooth_edges:

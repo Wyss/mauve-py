@@ -148,7 +148,9 @@ CLASSIFIERS = [
 ]
 
 mauve_extensions = [Extension('mauve.indexutils', 
-                                sources=['mauve/indexutils.pyx'])]
+                                sources=['mauve/indexutils.pyx'],
+                                extra_compile_args=['-Wno-error=declaration-after-statement', 
+                                                    '-Wno-unused-function')]]
 mauve_ext_list = cythonize(mauve_extensions)
 
 setup(
