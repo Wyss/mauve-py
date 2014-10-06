@@ -28,12 +28,61 @@ you may do so using the setup.py script::
 '''
 
 import os
+import stat
 import platform
 import subprocess
 
+from distutils import log as dlog
 from distutils.core import setup, Extension
+from distutils.command import install_lib
 from os.path import join as pjoin
 from os.path import relpath as rpath
+
+try:
+    from Cython.Build import cythonize
+except:
+  dlog.error("Please install cython")
+  raise
+
+try:
+    import numpy.distutils.misc_util
+except:
+    dlog.error("Please install numpy")
+    raise
+
+# list of all executable built by the mauve source
+mauve_executables = ["addUnalignedIntervals", "makeBadgerMatrix",
+"alignmentProjector", "backbone_global_to_local",
+"bbAnalyze", "bbFilter",           
+"coordinateTranslate", "createBackboneMFA",
+"extractBCITrees", "getAlignmentWindows",
+"getOrthologList", "repeatoire",
+"mauveAligner", "mauveStatic",
+"mauveToXMFA", "mfa2xmfa",
+"muscle", "progressiveMauve",
+"progressiveMauveStatic",
+"projectAndStrip", "randomGeneSample",
+"scoreAlignment", "stripGapColumns",
+"stripSubsetLCBs", "toGrimmFormat",
+"toMultiFastA", "toRawSequence",
+"uniqueMerCount", "uniquifyTrees"
+"xmfa2maf"
+]
+
+
+# to install executable files
+class ExeInstallLib(install_lib.install_lib):
+    def run(self):
+        install_lib.install_lib.run(self)
+        for fn in self.get_outputs():
+            base_filename = os.path.basename(fn)
+            if base_filename == "progressiveMauveStatic" or \
+                    base_filename == "progressiveMauve":
+                # make sure user executable
+                mode = os.stat(fn).st_mode | stat.S_IXUSR | stat.S_IXGRP
+                dlog.info("Changing mode of %s to %d", fn, mode)
+                os.chmod(fn, mode)
+# end class
 
 with open('README.md') as fd:
     LONG_DESCRIPTION = fd.read()
@@ -54,8 +103,11 @@ elif os_system == 'Linux':      # update this for BSD, other POSIX etc
 else:
     raise OSError("Platform %s not supported" % (os_system))
 
+dlog.info("Building mauve dependencies...")
+mauve_make = pjoin(SRC_PATH, mauve_make)
 mauvebuild = subprocess.Popen([mauve_make], shell=True, cwd=SRC_PATH)
 mauvebuild.wait()
+dlog.info("Finished building mauve dependencies")
 
 # Find all mauve data files to include with the package
 mauve_files = [rpath(pjoin(root, f), MODULE_PATH) for root, _, files in
@@ -63,10 +115,7 @@ mauve_files = [rpath(pjoin(root, f), MODULE_PATH) for root, _, files in
 mauve_files += [rpath(pjoin(root, f), MODULE_PATH) for root, _, files in
                     os.walk(INCLUDE_PATH) for f in files]
 
-"""
-test with:
-    python setup.py build_ext --inplace
-"""
+
 DESCRIPTION = ("Python wrapper for progressive mauve genome aligner")
 
 DISTNAME = 'mauve-py'
@@ -89,19 +138,6 @@ CLASSIFIERS = [
     'Topic :: Scientific/Engineering',
 ]
 
-from distutils.core import setup, Extension
-try:
-    from Cython.Build import cythonize
-except:
-  print("Please install cython")
-  raise
-
-try:
-    import numpy.distutils.misc_util
-except:
-    print("Please install numpy")
-    raise
-
 mauve_extensions = [Extension('mauve.indexutils', sources=['mauve/indexutils.pyx'])]
 mauve_ext_list = cythonize(mauve_extensions)
 
@@ -117,6 +153,7 @@ setup(
     url=URL,
     download_url=DOWNLOAD_URL,
     long_description=LONG_DESCRIPTION,
-    classifiers=CLASSIFIERS
+    classifiers=CLASSIFIERS,
     package_data={'mauve': mauve_files},
+    cmdclass={'install_lib':ExeInstallLib}
 )
