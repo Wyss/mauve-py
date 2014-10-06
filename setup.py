@@ -146,14 +146,20 @@ CLASSIFIERS = [
     'Programming Language :: Cython',
     'Topic :: Scientific/Engineering',
 ]
+MAJOR = 0
+MINOR = 1
+MICRO = 1
+VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
+
 
 mauve_extensions = [Extension('mauve.indexutils', 
                                 sources=['mauve/indexutils.pyx'],
                                 extra_compile_args=['-Wno-error=declaration-after-statement', 
-                                                    '-Wno-unused-function')]]
+                                                    '-Wno-unused-function'])]
 mauve_ext_list = cythonize(mauve_extensions)
 
 setup(
+    version=VERSION,
     name=DISTNAME,
     maintainer=AUTHORS,
     packages=['mauve'],
