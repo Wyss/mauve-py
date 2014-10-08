@@ -60,8 +60,9 @@ apt, yum, etc on Linux, or [Homebrew](http://brew.sh/) for OS X
 - [numpy](https://pypi.python.org/pypi/numpy/1.9.0)
 - [bitarray](https://pypi.python.org/pypi/bitarray/0.8.1)
 - [cython](https://pypi.python.org/pypi/Cython/0.21)
+- [libnano](https://github.com/Wyss/libnano)
 
-which can all be installed with `pip`
+which can all be installed with `pip` except `libnano`
 
 ## LINUX INSTALLATION (Debian)
 Double check you have the right `boost` components installed

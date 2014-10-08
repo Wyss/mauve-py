@@ -20,18 +20,11 @@ if not (os.path.isfile(PROG_MAUVE_STATIC_FP) and
                   'variable `MAUVE_DIR` is defined as: {}.'.format(
                    MAUVE_DIR, os.environ.get('MAUVE_DIR')))
 
-from .fasta import parseFasta
-from .xmfa import parseXMFA
-import mauve.indexutils as indexutils
+from libnano.fileio import getSeqFromFile
+from libnano.fileio.fasta import parseFasta
+from libnano.fileio.xmfa import parseXMFA
 
-def getSeqFromFile(seq_fp):
-    _, ext = os.path.splitext(seq_fp)
-    if ext in ('.fa', '.fasta'):
-        # Just returns the first sequence in the file for now --
-        # this may be undesirable as a general behavior
-        return parseFasta(seq_fp)[0][1]
-    else:
-        raise IOError("unknown format")
+import mauve.indexutils as indexutils
 
 # Non-mask array data type
 # 32-bit supports genomes up to 4 billion bases in length
@@ -147,22 +140,9 @@ def buildIndex(genome_fp, ref_genome_fp, genome_seq=None, ref_genome_seq=None,
 def test():
     import sys
 
-    # OUTPUT_TO_FN = True
-
-    # GENOME = 'test_mut_dup.fa'
-    # REF_GENOME = 'baseseq.fa'
-    # OUTPUT_FN = 'test_mut_dup.out'
-
     GENOME = os.path.join(LOCAL_DIR, 'mds42_recoded.fa')
     REF_GENOME = os.path.join(LOCAL_DIR, 'mds42_full.fa')
-    # OUTPUT_FN = os.path.join(LOCAL_DIR, '54_failed_seg_test-testcleanup.out')
-
-    # if OUTPUT_TO_FN:
-    #     print_fd = open(OUTPUT_FN, 'w')
-    # else:
-    #     print_fd = sys.stdout
-
-    # Cache the numpy array
+    
     try:
         idx_lut = np.load(os.path.join(LOCAL_DIR, 'test_index_lut.npy'))
     except IOError:
@@ -178,6 +158,4 @@ def test():
     return idx_lut, genome, ref_genome
 
 if __name__ == '__main__':
-    # import cProfile as profile
-    # profile.run('test()')
     test()
