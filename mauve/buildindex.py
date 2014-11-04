@@ -74,7 +74,7 @@ def runMauve(fasta_files, flags={}):
     # Remove .sslist files, if created
     for fp in abs_paths:
         try:
-            os.remove(os.path.splitext(fp)[0] + '.sslist')
+            os.remove(fp + '.sslist')
         except OSError:
             pass
 
