@@ -61,22 +61,23 @@ def runMauve(fasta_files, flags={}):
                      flags={'output'=k12_diff.xmfa'})
     '''
     abs_paths = [os.path.abspath(fp) for fp in fasta_files]
-
-    with TempDirs(2) as (temp_dir1, temp_dir2):
-        flags.update({'--scratch-path-1': temp_dir1,
-                      '--scratch-path-2': temp_dir2})
-        args = ([os.path.join(MAUVE_DIR, 'progressiveMauveStatic')] +
-                abs_paths + [str(el) for pair in flags.items() for el in pair])
-        proc = subprocess.Popen(args, stdout=subprocess.PIPE,
-                                stdin=subprocess.PIPE, cwd=temp_dir1)
-        proc.wait()
-
-    # Remove .sslist files, if created
-    for fp in abs_paths:
-        try:
-            os.remove(fp + '.sslist')
-        except OSError:
-            pass
+    try: 
+        with TempDirs(2) as (temp_dir1, temp_dir2):
+            flags.update({'--scratch-path-1': temp_dir1,
+                          '--scratch-path-2': temp_dir2})
+            args = ([os.path.join(MAUVE_DIR, 'progressiveMauveStatic')] +
+                    abs_paths + [str(el) for pair in flags.items() for el in 
+                    pair])
+            proc = subprocess.Popen(args, stdout=subprocess.PIPE,
+                                    stdin=subprocess.PIPE, cwd=temp_dir1)
+            proc.wait()
+    finally:
+        # Remove .sslist files, if created
+        for fp in abs_paths:
+            try:
+                os.remove(fp + '.sslist')
+            except OSError:
+                pass
 
 
 def getGenomeLength(genome_fp):
