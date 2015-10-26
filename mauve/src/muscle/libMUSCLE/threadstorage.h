@@ -62,7 +62,7 @@ public:
 	{
 		return t[OMP_GET_THREAD_NUM];
 	}
-private:
+
 	TLSstr( const TLSstr& tls );	// disallow copying
 	T t[MAX_THREAD_COUNT];
 };
