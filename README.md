@@ -5,25 +5,25 @@ mauve-py is particularly suited to mapping modified synthetic genomes back
 to a reference genome and includes features to aid in the "healing" of the
 mapping that the progressive mauve binaries miss
 
-See [mauve alignment](http://asap.ahabs.wisc.edu/software/mauve/overview.html) for original source.
-The Mauve License is GPLv2.
+See [mauve alignment](http://asap.ahabs.wisc.edu/software/mauve/overview.html) for original source. 
+The Mauve License is GPLv2.  
 
 Please cite progressive mauve:
 
-    Aaron E. Darling, Bob Mau, and Nicole T. Perna. 2010.
-    progressiveMauve: Multiple Genome Alignment with Gene Gain, Loss,
-    and Rearrangement.  PLoS One.  5(6):e11147.
+    Aaron E. Darling, Bob Mau, and Nicole T. Perna. 2010.  
+    progressiveMauve: Multiple Genome Alignment with Gene Gain, Loss, 
+    and Rearrangement.  PLoS One.  5(6):e11147. 
 
 All dependencies are grouped in this repo which include [MUSCLE](http://www.drive5.com/muscle/).
 MUSCLE is licensed in the [Public Domain](http://www.drive5.com/muscle/manual/license.html)
 
 For MUSCLE cite:
 
-    Edgar, R.C. (2004) MUSCLE: multiple sequence alignment with high accuracy
+    Edgar, R.C. (2004) MUSCLE: multiple sequence alignment with high accuracy 
     and high throughput Nucleic Acids Res. 32(5):1792-1797
 
 The included Python wrappers and file parsers are GPLv2 Licensed
-Copyright (c) 2014  Nick Conway, Ben Pruitt; Wyss Institute for
+Copyright (c) 2014  Nick Conway, Ben Pruitt; Wyss Institute for 
 Biologically Inspired Engineering
 
 
@@ -38,7 +38,7 @@ import mauve
 index_lookup_table = mauve.buildIndex("my_genome_A.fa", "reference_genome_B.fa")
 ```
 
-the `index_lut` is a lookup table mapping a modified genome A index to a reference
+the `index_lut` is a lookup table mapping a modified genome A index to a reference 
 genome B index from the 5' end starting at 0.
 
 ## Dependencies
@@ -46,18 +46,19 @@ genome B index from the 5' end starting at 0.
 ### Binary dependencies
 
 Get these for your platform (Linux or OS X, Windows is unsupported)
-
+    
 - [automake](https://www.gnu.org/software/automake/)
 - [libtool](https://www.gnu.org/software/libtool/)
 - [pkg-config](http://www.freedesktop.org/wiki/Software/pkg-config/)
 - [boost](http://www.boost.org/) > 1.55
 
-Which can easily be installed with the package manager for your OS,
+Which can easily be installed with the package manager for your OS, 
 apt, yum, etc on Linux, or [Homebrew](http://brew.sh/) for OS X
 
 ### Python dependencies
 
 - [numpy](https://pypi.python.org/pypi/numpy/1.9.0)
+- [bitarray](https://pypi.python.org/pypi/bitarray/0.8.1)
 - [cython](https://pypi.python.org/pypi/Cython/0.21)
 - [libnano](https://github.com/Wyss/libnano)
 
@@ -81,7 +82,7 @@ make sure you have `Homebrew` installed on OS X Mavericks
 
     brew install boost --c++11
 
-run:
+run: 
 
     python setup.py install
 
@@ -97,8 +98,8 @@ path for the fork of the source.  It is updated to build on recent gcc and clang
 with c++11, mainly out of the need to get rid of build errors and warnings.
 
 ## Deviations from stock mauve
-
+    
 - updated to latest boost 1.55ish so we now run BOOST_FILESYSTEM_VERSION 3 instead of 2
 - OS X is clang compatible now. follow instructions below.
-- no Windows support although it might be easy to add back in
+- no Windows support although it might be easy to add back in  
 - lots of compiler warning fixes thanks to building on both clang and gcc
