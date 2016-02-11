@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 '''
 ===========================================================
- mauve-py: 
+ mauve-py:
 ===========================================================
 
 ``mauve-py`` is a Python wrappers for a derivative of the
@@ -43,8 +43,8 @@ dlog.set_verbosity(dlog.INFO)
 try:
     from Cython.Build import cythonize
 except:
-  print("Please install cython")
-  raise
+    print("Please install cython")
+    raise
 
 try:
     import numpy.distutils.misc_util
@@ -52,30 +52,25 @@ except:
     print("Please install numpy")
     raise
 
-try:
-    import bitarray
-except:
-    print("Please install bitarray")
-    raise
-
 
 # list of all executable built by the mauve source
-mauve_executables = ["addUnalignedIntervals", "makeBadgerMatrix",
-"alignmentProjector", "backbone_global_to_local",
-"bbAnalyze", "bbFilter",           
-"coordinateTranslate", "createBackboneMFA",
-"extractBCITrees", "getAlignmentWindows",
-"getOrthologList", "repeatoire",
-"mauveAligner", "mauveStatic",
-"mauveToXMFA", "mfa2xmfa",
-"muscle", "progressiveMauve",
-"progressiveMauveStatic",
-"projectAndStrip", "randomGeneSample",
-"scoreAlignment", "stripGapColumns",
-"stripSubsetLCBs", "toGrimmFormat",
-"toMultiFastA", "toRawSequence",
-"uniqueMerCount", "uniquifyTrees",
-"xmfa2maf"
+mauve_executables = [
+    "addUnalignedIntervals", "makeBadgerMatrix",
+    "alignmentProjector", "backbone_global_to_local",
+    "bbAnalyze", "bbFilter",
+    "coordinateTranslate", "createBackboneMFA",
+    "extractBCITrees", "getAlignmentWindows",
+    "getOrthologList", "repeatoire",
+    "mauveAligner", "mauveStatic",
+    "mauveToXMFA", "mfa2xmfa",
+    "muscle", "progressiveMauve",
+    "progressiveMauveStatic",
+    "projectAndStrip", "randomGeneSample",
+    "scoreAlignment", "stripGapColumns",
+    "stripSubsetLCBs", "toGrimmFormat",
+    "toMultiFastA", "toRawSequence",
+    "uniqueMerCount", "uniquifyTrees",
+    "xmfa2maf"
 ]
 
 
@@ -120,9 +115,9 @@ print("Finished building mauve dependencies")
 
 # Find all mauve data files to include with the package
 mauve_files = [rpath(pjoin(root, f), MODULE_PATH) for root, _, files in
-                    os.walk(BIN_PATH) for f in files]
+               os.walk(BIN_PATH) for f in files]
 mauve_files += [rpath(pjoin(root, f), MODULE_PATH) for root, _, files in
-                    os.walk(INCLUDE_PATH) for f in files]
+                os.walk(INCLUDE_PATH) for f in files]
 
 
 DESCRIPTION = ("Python wrapper for progressive mauve genome aligner")
@@ -152,10 +147,12 @@ MICRO = 1
 VERSION = '%d.%d.%d' % (MAJOR, MINOR, MICRO)
 
 
-mauve_extensions = [Extension('mauve.indexutils', 
-                                sources=['mauve/indexutils.pyx'],
-                                extra_compile_args=['-Wno-error=declaration-after-statement', 
-                                                    '-Wno-unused-function'])]
+mauve_extensions = [Extension(
+    'mauve.indexutils',
+    sources=['mauve/indexutils.pyx'],
+    extra_compile_args=['-Wno-error=declaration-after-statement',
+                        '-Wno-unused-function']
+)]
 mauve_ext_list = cythonize(mauve_extensions)
 
 setup(

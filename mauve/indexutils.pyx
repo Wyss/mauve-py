@@ -1,4 +1,4 @@
-import bitarray
+
 import numpy as np
 
 cimport cython
@@ -8,8 +8,8 @@ cimport numpy as np
 # Non-mask array data type
 # 32-bit supports genomes up to 4 billion bases in length
 IDX_ARRAY_DTYPE = np.int32
-# Mask array data type (should only have values of 0 + 1 so unit8 is good)
-MASK_ARRAY_DTYPE = np.uint8
+# Mask array data type (should only have values of 0 + 1 so np.bool is good)
+MASK_ARRAY_DTYPE = np.bool
 
 ctypedef np.int32_t IDX_ARRAY_DTYPE_t
 
@@ -24,7 +24,8 @@ def lookupSubAlignment(seq_num, sub_alignment_group):
     return sa
 
 
-def fixZeroIdx(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut, genome, ref_genome):
+def fixZeroIdx(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut, genome,
+               ref_genome):
     """ only map the zero index on an exact match
     it's problematic
     """
@@ -44,13 +45,15 @@ def fixZeroIdx(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut, genome, ref_genome
 
 @cython.wraparound(False)
 @cython.boundscheck(False)
-def fillGaps(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut, int max_gap_width=300):
+def fillGaps(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut,
+             int max_gap_width=300):
     ''' Fill gaps in the alignment that are up to `max_gap_width` in size. A
     gap is only filled if flanking indices can be found such that:
 
         upper_idx - lower_idx == upper_mapped_idx - lower_mapped_idx
     '''
-    cdef int idx, upper_idx, lower_idx, mapped_idx, upper_mapped_idx, lower_mapped_idx
+    cdef int idx, upper_idx, lower_idx, mapped_idx
+    cdef int upper_mapped_idx, lower_mapped_idx
     # for idx, mapped_idx in enumerate(idx_lut[1:], start=1):
     arange = np.arange
     for idx in range(1, len(idx_lut)):
@@ -75,7 +78,8 @@ def fillGaps(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut, int max_gap_width=30
 
 @cython.wraparound(False)
 @cython.boundscheck(False)
-def smoothEdges(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut, int smoothing_radius=20):
+def smoothEdges(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut,
+                int smoothing_radius=20):
     ''' Corrects issues that result in messy / incorrect alignments in areas
     of high mismatch density. Mauve sometimes chokes a little bit when there
     are multiple mismatches in close proximity to one another, so we can
@@ -89,7 +93,8 @@ def smoothEdges(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut, int smoothing_rad
 
     '''
     # for idx, mapped_idx in enumerate(idx_lut[1:], start=1):
-    cdef int idx, upper_idx, mapped_idx, lower_mapped_idx, lower_idx, upper_mapped_idx
+    cdef int idx, upper_idx, mapped_idx, lower_mapped_idx
+    cdef int lower_idx, upper_mapped_idx
     for idx in range(1, len(idx_lut)):
         mapped_idx = idx_lut[idx]
         if mapped_idx != idx_lut[idx-1] + 1:
@@ -111,7 +116,8 @@ def smoothEdges(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut, int smoothing_rad
 def findGaps(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut):
     ''' Find and print gaps in the idx_lut
     '''
-    cdef int idx, upper_idx, lower_mapped_idx, upper_mapped_idx, gap_size, mapped_idx
+    cdef int idx, upper_idx, lower_mapped_idx, upper_mapped_idx
+    cdef int gap_size, mapped_idx
     gap_arr = np.zeros(idx_lut.shape[0], dtype=np.int32)
     try:
         for idx in range(1, len(idx_lut)):
@@ -127,7 +133,8 @@ def findGaps(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut):
                     if ((upper_mapped_idx - lower_mapped_idx) ==
                        (upper_idx - lower_idx)):
                         gap_size = upper_idx - lower_idx
-                        idx_lut[lower_idx:upper_idx+1] = np.arange(lower_mapped_idx, upper_mapped_idx+1, dtype=int)
+                        idx_lut[lower_idx:upper_idx+1] = np.arange(
+                            lower_mapped_idx, upper_mapped_idx+1, dtype=int)
                         gap_arr[idx] = gap_size
                         success = True
                         break
@@ -145,18 +152,15 @@ def findEdges(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut):
     uses slicing
     '''
     edge_arr = np.zeros(idx_lut.shape[0], dtype=MASK_ARRAY_DTYPE)
-    # edge_arr = bitarray.bitarray(idx_lut.shape[0])
-    # edge_arr.setall(0)
     edge_arr_view = edge_arr[1:]    # slice not a copy
     delta_map_idxs = idx_lut[1:] - idx_lut[:-1]
     edge_arr_view[delta_map_idxs != 1] = 1
     edge_arr[0] = 1     # 0 index is always an edge
-    edge_bitarray = bitarray.bitarray()
-    edge_bitarray.pack(edge_arr.tostring())
-    return edge_bitarray
+    return edge_arr
 
 
-def findMismatches(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut, genome, ref_genome):
+def findMismatches(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut, genome,
+                   ref_genome):
     cdef int idx, mapped_idx
     cdef int len_genome = len(genome)
     cdef char base
@@ -164,7 +168,7 @@ def findMismatches(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut, genome, ref_ge
     cdef char* genome_string = genome
     cdef char* ref_genome_string = ref_genome
 
-    mismatch_arr = bitarray.bitarray(idx_lut.shape[0])
+    mismatch_arr = np.zeros(idx_lut.shape[0], dtype=MASK_ARRAY_DTYPE)
     mismatch_arr.setall(0)
     for idx in range(len_genome):
         base = genome_string[idx]
@@ -179,7 +183,9 @@ def findDuplicateMappings(np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] idx_lut):
     ''' Find duplicate mappings in the idx_lut. If everything is working
     properly there should be 1:1, unambiguous mappings.
     '''
-    cdef np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] arr_cpy = np.clip(idx_lut, 0, (2**31)-1) # clip to 0, 2**31-1
+    # clip to 0, 2**31-1
+    cdef np.ndarray[IDX_ARRAY_DTYPE_t, ndim=1] arr_cpy = np.clip(idx_lut, 0,
+                                                                 (2**31)-1)
     cdef np.ndarray[np.int_t, ndim=1] mapped_idx_counts = np.bincount(arr_cpy)
     # -1 as 0 will show up here as we are clipping unmapped basses to 0
     cdef int num_duplicate_mappings = np.sum(mapped_idx_counts > 1) - 1
